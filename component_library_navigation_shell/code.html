@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaSense AI - Component Library: Shell &amp; Navigation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#0c1e26",
+                    "inverse-surface": "#213145",
+                    "surface-container-high": "#dce9ff",
+                    "surface-bright": "#f8f9ff",
+                    "background": "#f8f9ff",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "surface": "#f8f9ff",
+                    "secondary-fixed": "#d3e5f1",
+                    "primary-fixed": "#d3e3ff",
+                    "surface-container": "#e5eeff",
+                    "surface-dim": "#cbdbf5",
+                    "secondary-container": "#d3e5f1",
+                    "tertiary": "#2c6085",
+                    "surface-variant": "#d3e4fe",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "tertiary-container": "#4779a0",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-secondary-fixed-variant": "#384953",
+                    "on-primary-container": "#fdfcff",
+                    "primary-fixed-dim": "#a3c9ff",
+                    "primary-container": "#0076d1",
+                    "tertiary-fixed-dim": "#9bccf6",
+                    "primary": "#005da7",
+                    "inverse-primary": "#a3c9ff",
+                    "on-tertiary-container": "#fcfcff",
+                    "on-tertiary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "outline-variant": "#c0c7d5",
+                    "outline": "#707785",
+                    "on-tertiary-fixed": "#001e30",
+                    "on-primary-fixed": "#001c39",
+                    "on-background": "#0b1c30",
+                    "secondary-fixed-dim": "#b7c9d5",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#cbe6ff",
+                    "surface-tint": "#0060ab",
+                    "secondary": "#50616b",
+                    "on-secondary-container": "#566771",
+                    "on-surface": "#0b1c30",
+                    "on-tertiary-fixed-variant": "#0e4b6f",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#404753",
+                    "on-primary-fixed-variant": "#004883",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "64px",
+                    "base": "8px",
+                    "max-width": "1280px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "label-md": ["JetBrains Mono"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d3e4fe;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0076d1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- TopNavBar Implementation -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-gutter py-4 bg-surface-bright/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-8">
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">AquaSense AI</h1>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Analytics</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Assets</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors" href="#">Forecasts</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 w-64 focus:ring-2 focus:ring-primary transition-all text-body-sm" placeholder="Search data..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors scale-95 active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors scale-95 active:opacity-80">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-cover bg-center border-2 border-primary-container" data-alt="Close-up portrait of a professional woman with a friendly expression, wearing a minimalist smart-casual outfit. She is positioned against a clean, softly lit office environment with subtle blue and white color tones that match the tech-forward AquaSense brand aesthetic. The lighting is diffused and high-key, creating an airy and approachable look." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCQoyf8FIsUpv5XrNOlzKICs40i0VDDEX3FTUYoJOojKK5bjYbncdo738pQrWdfyVRZYsU0x4g3sSRuM0L6crxMjLds1DAaGoNp0jtWgamBlBZ3edfZ7Ruw4jIbpVe7p474sRVKRVpTiQEAfVeR7e-QWDeVlMkYqTDUJnvbQ3yO3_TQUP5swx7M7NOsg5RjIECrbJsZrdwaHsW3_mlwRBxyP1-u6gbI3ws4mVTthoBsbPBpT1Q64G8k')"></div>
+</div>
+</header>
+<main class="pt-24 px-gutter max-w-max-width mx-auto pb-32">
+<!-- Hero Section -->
+<section class="mb-16">
+<div class="flex flex-col md:flex-row items-center gap-12">
+<div class="flex-1">
+<span class="text-primary font-label-md text-label-md tracking-widest uppercase mb-4 block">Design System v1.0</span>
+<h2 class="font-headline-xl text-headline-xl mb-6">Hydrologic Modernism</h2>
+<p class="text-on-surface-variant max-w-2xl text-body-md leading-relaxed mb-8">
+                        The AquaSense AI component library defines the visual grammar of clarity and fluidity. Inspired by the properties of water, our system uses glassmorphism and tonal layering to provide enterprise-grade water monitoring tools that feel breathable yet technologically advanced.
+                    </p>
+<div class="flex gap-4">
+<button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-container transition-all">
+                            Explore Guidelines
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="flex-1 w-full relative">
+<div class="aspect-square rounded-3xl overflow-hidden glass shadow-2xl relative border border-white/40">
+
+<div class="absolute inset-0 flex items-center justify-center p-8">
+<div class="bg-white/80 p-8 rounded-2xl shadow-lg border border-primary/10 max-w-sm text-center">
+<span class="material-symbols-outlined text-primary text-5xl mb-4" style="font-variation-settings: 'FILL' 1;">opacity</span>
+<p class="text-on-surface font-headline-lg-mobile text-headline-lg-mobile font-bold mb-2">98.4% Purity</p>
+<p class="text-on-surface-variant text-body-sm">Crystal Lake Reservoir monitoring remains within optimal thresholds.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Documentation: SideNavBar -->
+<section class="mb-16">
+<div class="flex items-center justify-between border-b border-surface-variant pb-4 mb-8">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-primary">Side Navigation Shell</h3>
+<p class="text-on-surface-variant text-body-sm mt-1">Enterprise-tier dashboard structure with persistent organizational context.</p>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-md font-label-md">Desktop Component</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+<div class="lg:col-span-1 h-[600px] rounded-2xl overflow-hidden shadow-md bg-surface-container-low border border-surface-variant">
+<!-- Actual Component Implementation -->
+<aside class="flex flex-col h-full p-4 gap-2">
+<div class="flex items-center gap-3 px-2 py-4 mb-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">waves</span>
+</div>
+<div>
+<h4 class="font-bold text-primary leading-tight">AquaSense AI</h4>
+<p class="text-[10px] text-outline font-label-md uppercase tracking-wider">Enterprise Tier</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-bold text-body-sm mb-6 flex items-center justify-center gap-2 transition-transform hover:translate-x-1">
+<span class="material-symbols-outlined text-sm">add</span>
+                            New Analysis
+                        </button>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                                Overview
+                            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">opacity</span>
+                                Water Monitoring
+                            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">psychology</span>
+                                AI Insights
+                            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">terrain</span>
+                                Field Reports
+                            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">settings_suggest</span>
+                                System Health
+                            </a>
+</nav>
+<div class="pt-4 border-t border-surface-variant space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">help_center</span>
+                                Support
+                            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">logout</span>
+                                Sign Out
+                            </a>
+</div>
+</aside>
+</div>
+<div class="lg:col-span-3 flex flex-col gap-6">
+<div class="bg-surface-container-low p-6 rounded-2xl border border-surface-variant">
+<h4 class="font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">info</span>
+                            Usage Guidance
+                        </h4>
+<p class="text-on-surface-variant text-body-sm leading-relaxed">
+                            The SideNavBar is reserved for enterprise-grade management interfaces. It should remain fixed on the left side for desktops and tablets. Active states are indicated by the <code class="text-primary font-mono px-1 bg-primary-container/20 rounded">bg-secondary-container</code> class to provide soft visual confirmation without high contrast fatigue.
+                        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-5 rounded-xl border border-outline-variant bg-white">
+<p class="font-label-md text-label-md text-outline mb-2">PROPERTIES</p>
+<ul class="space-y-2 text-body-sm">
+<li class="flex justify-between"><span>Width</span> <span class="font-mono text-primary">256px (w-64)</span></li>
+<li class="flex justify-between"><span>Padding</span> <span class="font-mono text-primary">16px (p-4)</span></li>
+<li class="flex justify-between"><span>Shadow</span> <span class="font-mono text-primary">shadow-md</span></li>
+</ul>
+</div>
+<div class="p-5 rounded-xl border border-outline-variant bg-white">
+<p class="font-label-md text-label-md text-outline mb-2">INTERACTIONS</p>
+<p class="text-body-sm text-on-surface-variant">Hover states utilize <span class="font-mono">translate-x-1</span> for subtle depth feedback, following the "Fluidity" brand pillar.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Overlays & Feedback Section -->
+<section class="mb-16">
+<div class="flex items-center justify-between border-b border-surface-variant pb-4 mb-8">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-primary">Overlays &amp; Feedback</h3>
+<p class="text-on-surface-variant text-body-sm mt-1">Contextual information, critical alerts, and system status updates.</p>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-label-md font-label-md">Interactive Layers</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Drawer Representative -->
+<div class="bg-surface-container-high/40 rounded-2xl p-6 relative min-h-[400px] border border-surface-variant flex flex-col items-center justify-center overflow-hidden">
+<p class="text-on-surface-variant font-label-md uppercase mb-6">Side Drawer</p>
+<button class="bg-white border-2 border-primary text-primary px-4 py-2 rounded-lg font-bold hover:bg-primary hover:text-white transition-all z-10" onclick="toggleDrawer()">
+                        Preview Node Details
+                    </button>
+<!-- Simulated Drawer -->
+<div class="absolute inset-y-0 right-0 w-3/4 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out border-l border-surface-variant" id="simulatedDrawer">
+<div class="p-6 h-full flex flex-col">
+<div class="flex justify-between items-center mb-8">
+<h5 class="font-bold text-headline-lg-mobile text-headline-lg-mobile">Node #821-B</h5>
+<button class="text-outline hover:text-error" onclick="toggleDrawer()"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="space-y-6 flex-1">
+<div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-variant">
+<p class="text-outline text-label-md uppercase mb-1">Status</p>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="font-bold text-green-700">Operational</span>
+</div>
+</div>
+<div class="w-full h-40 rounded-xl bg-cover bg-center" data-alt="A macro photography shot of a high-tech water sensor submerged in crystal clear water. The device is glowing with a soft blue LED light, indicating data transmission. Small, aesthetic air bubbles cling to the sleek metal surface of the sensor. The surrounding environment is light, clean, and clinical, emphasizing precision engineering and environmental monitoring technology." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDTwt4RbrT3sJn_ch624jnD6saPUnDd9wY7u2dMJadOke8OWhG5IuWxUQXJYD8V0GOTTg9cX4-Kij8p98RYHaTkEIibkRSQYY1dpvUXFyw4DiLp6tz-vP00pioQlQBLDDTwTx6VZWSpzHhQqaTtWr_6jAfrdhn-7UgaQFvrEkt7CtCX4w2_6-R7Ny4eidwP2FkdQDHMK-JvJGR01O--5jD0PIszzBveLZDc6xaEDZ2UAhpbdr4Ovjsb')"></div>
+<div class="space-y-2">
+<p class="text-on-surface-variant text-body-sm">Flow Rate: <span class="font-bold">12.4 L/s</span></p>
+<p class="text-on-surface-variant text-body-sm">Pressure: <span class="font-bold">4.2 bar</span></p>
+<p class="text-on-surface-variant text-body-sm">Turbidity: <span class="font-bold">0.8 NTU</span></p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-bold">Adjust Calibration</button>
+</div>
+</div>
+</div>
+<!-- Dialog Representative -->
+<div class="bg-surface-container-high/40 rounded-2xl p-6 border border-surface-variant flex flex-col items-center justify-center">
+<p class="text-on-surface-variant font-label-md uppercase mb-6">Confirmation Dialog</p>
+<div class="bg-white rounded-2xl shadow-xl border border-error/20 p-6 max-w-[280px]">
+<div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center text-error mb-4">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<h5 class="font-bold text-on-surface mb-2">Emergency Shutoff?</h5>
+<p class="text-on-surface-variant text-body-sm mb-6">This action will immediately stop flow to Sector 4. This cannot be undone.</p>
+<div class="flex flex-col gap-2">
+<button class="bg-error text-on-error py-2 rounded-lg font-bold">Confirm Shutoff</button>
+<button class="text-outline py-2 font-bold hover:bg-surface-container-low rounded-lg">Cancel</button>
+</div>
+</div>
+</div>
+<!-- Toasts Representative -->
+<div class="bg-surface-container-high/40 rounded-2xl p-6 border border-surface-variant flex flex-col items-center justify-center space-y-4">
+<p class="text-on-surface-variant font-label-md uppercase mb-2">Toasts &amp; Snakbars</p>
+<div class="bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 w-full max-w-[240px]">
+<span class="material-symbols-outlined text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-sm">Data Synced</span>
+</div>
+<div class="bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-lg shadow-lg flex justify-between items-center w-full max-w-[240px]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-green-400">task_alt</span>
+<span class="text-body-sm">Alert Resolved</span>
+</div>
+<button class="text-primary-fixed-dim text-xs font-bold uppercase hover:underline">Undo</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Mobile BottomNavBar -->
+<section class="mb-16">
+<div class="flex items-center justify-between border-b border-surface-variant pb-4 mb-8">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-primary">Mobile Navigation</h3>
+<p class="text-on-surface-variant text-body-sm mt-1">Optimized for "Farmer Mode" field operations.</p>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-label-md font-label-md">Mobile-Only</span>
+</div>
+<div class="flex flex-col md:flex-row gap-12 items-center">
+<div class="w-[320px] h-[580px] bg-white rounded-[40px] border-[8px] border-inverse-surface shadow-2xl overflow-hidden relative flex flex-col">
+<!-- Top Status Bar Simulation -->
+<div class="h-10 bg-white flex justify-between items-center px-8 pt-4">
+<span class="text-xs font-bold">9:41</span>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-xs">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined text-xs">wifi</span>
+<span class="material-symbols-outlined text-xs">battery_full</span>
+</div>
+</div>
+<!-- Content Simulation -->
+<div class="flex-1 p-6 space-y-6">
+<div class="h-12 w-32 bg-surface-container-high rounded-lg mb-4"></div>
+<div class="space-y-3">
+<div class="h-4 w-full bg-surface-container rounded"></div>
+<div class="h-4 w-5/6 bg-surface-container rounded"></div>
+<div class="h-4 w-4/6 bg-surface-container rounded"></div>
+</div>
+<div class="aspect-video w-full bg-surface-container-low rounded-2xl border border-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-outline text-4xl">map</span>
+</div>
+</div>
+<!-- FAB Representative -->
+<button class="absolute bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center scale-95 active:scale-90 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+<!-- Mobile BottomNavBar Implementation -->
+<nav class="h-20 bg-surface-bright/90 backdrop-blur-md flex justify-around items-center px-4 border-t border-surface-variant/30">
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px]">Explore</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px]">Activity</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px]">Profile</span>
+</div>
+</nav>
+</div>
+<div class="flex-1 space-y-6">
+<div class="p-6 bg-surface-container-low rounded-2xl border border-surface-variant">
+<h5 class="font-bold mb-4">Design Philosophy</h5>
+<p class="text-on-surface-variant text-body-md leading-relaxed">
+                            The BottomNavBar is only visible on mobile screens (<code class="font-mono text-primary">md:hidden</code>). It prioritizes thumb-accessible touch targets and provides high-contrast iconography for outdoor visibility.
+                        </p>
+</div>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<p class="text-body-sm text-on-surface-variant"><span class="font-bold text-on-surface">Blur Suppression:</span> No top/bottom border lines. Separation is achieved through tonal shifts and backdrop blur.</p>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<p class="text-body-sm text-on-surface-variant"><span class="font-bold text-on-surface">Active State:</span> Uses filled icons and bold typography for immediate orientation.</p>
+</li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Implementation -->
+<footer class="w-full py-12 px-gutter flex flex-col md:flex-row justify-between items-center gap-8 bg-surface-container-highest border-t border-surface-variant/30">
+<div class="flex flex-col items-center md:items-start gap-2">
+<h2 class="font-headline-lg text-headline-lg font-bold text-primary">AquaSense AI</h2>
+<p class="text-on-surface-variant text-body-sm">© 2024 AquaSense AI. All rights reserved.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-8">
+<a class="text-on-surface-variant text-body-sm hover:text-primary transition-colors underline decoration-primary/20" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant text-body-sm hover:text-primary transition-colors underline decoration-primary/20" href="#">Terms of Service</a>
+<a class="text-on-surface-variant text-body-sm hover:text-primary transition-colors underline decoration-primary/20" href="#">Security</a>
+<a class="text-on-surface-variant text-body-sm hover:text-primary transition-colors underline decoration-primary/20" href="#">API Documentation</a>
+</nav>
+</footer>
+<script>
+        function toggleDrawer() {
+            const drawer = document.getElementById('simulatedDrawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        // Micro-interaction for hover effects on cards
+        document.querySelectorAll('.hover-lift').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

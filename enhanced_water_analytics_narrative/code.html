@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Water Analytics Stories | AquaSense AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#0060ab",
+                    "surface-container-low": "#eff4ff",
+                    "on-surface": "#0b1c30",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#d3e4fe",
+                    "surface-variant": "#d3e4fe",
+                    "tertiary-fixed": "#cbe6ff",
+                    "tertiary": "#2c6085",
+                    "primary-container": "#0076d1",
+                    "secondary-container": "#d3e5f1",
+                    "primary-fixed": "#d3e3ff",
+                    "on-tertiary-container": "#fcfcff",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-high": "#dce9ff",
+                    "secondary-fixed": "#d3e5f1",
+                    "on-tertiary-fixed-variant": "#0e4b6f",
+                    "on-secondary-fixed": "#0c1e26",
+                    "primary-fixed-dim": "#a3c9ff",
+                    "inverse-primary": "#a3c9ff",
+                    "on-secondary-container": "#566771",
+                    "on-tertiary-fixed": "#001e30",
+                    "surface-container": "#e5eeff",
+                    "surface": "#f8f9ff",
+                    "on-primary-fixed": "#001c39",
+                    "secondary-fixed-dim": "#b7c9d5",
+                    "on-primary-fixed-variant": "#004883",
+                    "on-secondary-fixed-variant": "#384953",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#404753",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#4779a0",
+                    "secondary": "#50616b",
+                    "outline-variant": "#c0c7d5",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "background": "#f8f9ff",
+                    "on-background": "#0b1c30",
+                    "primary": "#005da7",
+                    "on-primary-container": "#fdfcff",
+                    "inverse-surface": "#213145",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#9bccf6",
+                    "surface-dim": "#cbdbf5",
+                    "on-primary": "#ffffff",
+                    "outline": "#707785"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "max-width": "1280px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "64px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "label-md": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px -4px rgba(0, 96, 171, 0.1), 0 4px 12px -2px rgba(0, 96, 171, 0.05);
+      }
+      .elevated-card {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        border: 1px solid #c0c7d5;
+      }
+      .water-bg {
+        background-color: #f8f9ff;
+        background-image: radial-gradient(circle at 2px 2px, rgba(0, 96, 171, 0.05) 1px, transparent 0);
+        background-size: 40px 40px;
+        position: relative;
+      }
+      .water-bg::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(211, 228, 254, 0.4) 0%, rgba(248, 249, 255, 0) 50%, rgba(211, 228, 254, 0.3) 100%);
+        pointer-events: none;
+        z-index: -1;
+      }
+      .stagger-in > * {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+      @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .delay-1 { animation-delay: 0.1s; }
+      .delay-2 { animation-delay: 0.2s; }
+      .delay-3 { animation-delay: 0.3s; }
+      .delay-4 { animation-delay: 0.4s; }
+      .delay-5 { animation-delay: 0.5s; }
+      
+      .grid-dot {
+        background-image: radial-gradient(currentColor 1px, transparent 1px);
+        background-size: 8px 8px;
+      }
+    </style>
+</head>
+<body class="water-bg text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant/50 shadow-sm">
+<div class="flex items-center gap-8">
+<h1 class="text-headline-sm font-bold text-primary tracking-tight">AquaSense AI</h1>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors px-3 py-1 rounded-lg" href="#">Dashboard</a>
+<a class="text-primary font-bold transition-colors px-3 py-1 rounded-lg" href="#">Insights</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors px-3 py-1 rounded-lg" href="#">Alerts</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors px-3 py-1 rounded-lg" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-high transition-colors rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high transition-colors rounded-full text-on-surface-variant">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- District Overview Status Bar -->
+<div class="fixed top-16 w-full z-40 bg-surface-container-low/90 backdrop-blur-sm border-b border-outline-variant/30 hidden md:block">
+<div class="max-w-[1280px] mx-auto px-margin-desktop h-10 flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="font-label-md text-[10px] text-on-surface-variant uppercase">Supply Stability</span>
+<div class="flex items-end gap-0.5 h-3">
+<div class="w-1 bg-primary h-2 rounded-t-full"></div>
+<div class="w-1 bg-primary h-3 rounded-t-full"></div>
+<div class="w-1 bg-primary h-2.5 rounded-t-full"></div>
+<div class="w-1 bg-primary h-3 rounded-t-full"></div>
+<div class="w-1 bg-primary h-1.5 rounded-t-full"></div>
+</div>
+<span class="text-label-md font-bold text-primary">98.2%</span>
+</div>
+<div class="h-4 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-3">
+<span class="font-label-md text-[10px] text-on-surface-variant uppercase">Network Health</span>
+<div class="flex items-end gap-0.5 h-3">
+<div class="w-1 bg-tertiary h-1.5 rounded-t-full"></div>
+<div class="w-1 bg-tertiary h-2 rounded-t-full"></div>
+<div class="w-1 bg-tertiary h-3 rounded-t-full"></div>
+<div class="w-1 bg-tertiary h-2.5 rounded-t-full"></div>
+<div class="w-1 bg-tertiary h-2.5 rounded-t-full"></div>
+</div>
+<span class="text-label-md font-bold text-tertiary">Optimal</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+<span class="text-label-md">Central District Hub</span>
+</div>
+</div>
+</div>
+<main class="pt-32 pb-32 max-w-[800px] mx-auto px-margin-mobile md:px-0 relative">
+<!-- Decorative detail element -->
+<div class="absolute -left-12 top-40 text-outline-variant/30 hidden lg:block">
+<div class="grid-dot w-24 h-24"></div>
+</div>
+<!-- Interactive Filters Section -->
+<section class="mb-12 stagger-in relative">
+<div class="flex flex-wrap items-center justify-between gap-4 p-4 glass-card rounded-2xl elevated-card">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">filter_list</span>
+<span class="font-label-md text-label-md text-on-surface-variant">ANALYTICS FILTERS</span>
+</div>
+<div class="flex gap-2">
+<select class="bg-surface-container-lowest border-outline-variant rounded-lg font-body-sm text-body-sm px-4 py-2 focus:ring-primary focus:border-primary cursor-pointer hover:border-primary transition-colors">
+<option>Last 30 Days</option>
+<option>Quarter to Date</option>
+<option>Yearly Overview</option>
+</select>
+<select class="bg-surface-container-lowest border-outline-variant rounded-lg font-body-sm text-body-sm px-4 py-2 focus:ring-primary focus:border-primary cursor-pointer hover:border-primary transition-colors">
+<option>All Sectors</option>
+<option>Residential</option>
+<option>Commercial</option>
+<option>Agriculture</option>
+</select>
+</div>
+</div>
+</section>
+<!-- The Consumption Narrative -->
+<article class="space-y-16">
+<!-- Story Header -->
+<div class="stagger-in delay-1 relative">
+<p class="font-label-md text-label-md text-primary tracking-widest uppercase mb-2">Story 01</p>
+<h2 class="font-headline-xl text-headline-xl mb-4">The Consumption Narrative</h2>
+<p class="text-on-surface-variant max-w-2xl">A comprehensive deep-dive into how your district's water lifecycle has evolved over the past month, identifying hidden efficiencies and emerging patterns.</p>
+</div>
+<!-- Large Metric & Line Chart -->
+<section class="stagger-in delay-2">
+<div class="glass-card rounded-3xl p-8 elevated-card overflow-hidden relative">
+<!-- Tiny decorative icon -->
+<span class="material-symbols-outlined absolute top-4 right-4 text-outline-variant/20 text-4xl">add</span>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<p class="text-on-surface-variant text-body-sm">Total Water Consumption</p>
+<div class="flex items-center gap-1 bg-surface-container-highest/50 px-2 py-0.5 rounded-full border border-primary/10">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+<span class="text-[10px] font-bold text-on-surface-variant">HIGH CONFIDENCE</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-xl text-[56px] leading-none text-primary">42.8M</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface-variant leading-none">GALLONS</span>
+<span class="text-[11px] text-primary/60 font-medium mt-1">Avg Daily: 1.4M</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-secondary-container/60 backdrop-blur-sm px-4 py-2 rounded-full text-on-secondary-container font-label-md text-label-md border border-white/50">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+                        12.4% vs Last Month
+                    </div>
+</div>
+<!-- Line Chart Placeholder -->
+<div class="h-64 w-full relative mb-6">
+<div class="absolute inset-0 flex items-end justify-between px-2 opacity-10">
+<div class="w-px h-full bg-outline"></div>
+<div class="w-px h-full bg-outline"></div>
+<div class="w-px h-full bg-outline"></div>
+<div class="w-px h-full bg-outline"></div>
+<div class="w-px h-full bg-outline"></div>
+</div>
+<svg class="w-full h-full drop-shadow-xl" viewbox="0 0 800 200">
+<path d="M0,150 C100,140 200,160 300,120 S500,40 600,60 S800,20 800,20" fill="none" stroke="var(--primary)" stroke-linecap="round" stroke-width="4"></path>
+<path class="fill-primary/5" d="M0,150 C100,140 200,160 300,120 S500,40 600,60 S800,20 800,20 L800,200 L0,200 Z"></path>
+</svg>
+</div>
+<div class="p-4 bg-surface-container-low/50 rounded-xl border border-outline-variant/30 flex items-start gap-4">
+<span class="material-symbols-outlined text-primary p-2 bg-white/80 rounded-lg shadow-sm border border-white">auto_awesome</span>
+<p class="text-body-md text-on-surface">
+<strong class="font-semibold">Insight:</strong> Residential consumption decreased by 8% due to localized rain harvesting and cooler average evening temperatures.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Reasons: Breakdown -->
+<section class="stagger-in delay-3">
+<div class="flex items-center justify-between mb-8">
+<h3 class="font-headline-lg text-headline-lg">Contributing Factors</h3>
+<div class="h-px flex-grow mx-6 bg-outline-variant/30 hidden md:block"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-6 rounded-2xl bg-white elevated-card hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-surface-container-highest rounded-xl">
+<span class="material-symbols-outlined text-primary">cloud</span>
+</span>
+<span class="text-primary font-bold text-headline-lg">-15%</span>
+</div>
+<h4 class="font-semibold text-on-surface mb-2">Seasonal Change</h4>
+<p class="text-body-sm text-on-surface-variant">Higher precipitation reduced external irrigation needs.</p>
+</div>
+<div class="p-6 rounded-2xl bg-white elevated-card hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-secondary-container rounded-xl">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant">energy_savings_leaf</span>
+</span>
+<span class="text-secondary font-bold text-headline-lg">-4%</span>
+</div>
+<h4 class="font-semibold text-on-surface mb-2">Conservation</h4>
+<p class="text-body-sm text-on-surface-variant">Smart meter initiatives reduced peak-hour domestic usage.</p>
+</div>
+<div class="p-6 rounded-2xl bg-white elevated-card hover:translate-y-[-4px] transition-all duration-300">
+<div class="flex items-center justify-between mb-4">
+<span class="p-2 bg-tertiary-container/20 rounded-xl">
+<span class="material-symbols-outlined text-tertiary">factory</span>
+</span>
+<span class="text-tertiary font-bold text-headline-lg">-2%</span>
+</div>
+<h4 class="font-semibold text-on-surface mb-2">Industrial Efficiency</h4>
+<p class="text-body-sm text-on-surface-variant">Cooling system upgrades at the northern manufacturing plant.</p>
+</div>
+</div>
+</section>
+<!-- 3D Illustration -->
+<section class="stagger-in delay-3 py-8">
+<div class="grid grid-cols-2 gap-6 h-72">
+<div class="rounded-3xl overflow-hidden relative group elevated-card">
+<img alt="Growth and Intelligence" class="object-cover w-full h-full scale-110 group-hover:scale-100 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida/AP1WRLv10Ved5G9jKRqzEwayXjNBylQlCWQ1irphgss-E4QnMsq3TiTm5mDKzBlK-sNmVJ1RybMZ8exlaYvO_rB4jDWDUJaD1yL_IEybtst54ecUlVVM-o7F1dtptnNaZO3_WfCrIadmK2HnpAkMBWSxAhvOWVuR9047KYvUUkiNwWigsUDYJDT5hrcUgGtJyuSjaFXmPYDIcoZO3HASBWD8OlOWY1p4JB2yOabR2HPGkRwGD2FZsLmb_es5muo" style="object-position: top left;"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent flex items-end p-6">
+<p class="text-white font-semibold">Stability through Intelligence</p>
+</div>
+</div>
+<div class="rounded-3xl overflow-hidden relative group elevated-card">
+<img alt="Trust and Growth" class="object-cover w-full h-full scale-110 group-hover:scale-100 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida/AP1WRLv10Ved5G9jKRqzEwayXjNBylQlCWQ1irphgss-E4QnMsq3TiTm5mDKzBlK-sNmVJ1RybMZ8exlaYvO_rB4jDWDUJaD1yL_IEybtst54ecUlVVM-o7F1dtptnNaZO3_WfCrIadmK2HnpAkMBWSxAhvOWVuR9047KYvUUkiNwWigsUDYJDT5hrcUgGtJyuSjaFXmPYDIcoZO3HASBWD8OlOWY1p4JB2yOabR2HPGkRwGD2FZsLmb_es5muo" style="object-position: bottom right;"/>
+<div class="absolute inset-0 bg-gradient-to-t from-tertiary/80 via-tertiary/20 to-transparent flex items-end p-6">
+<p class="text-white font-semibold">Growth through Conservation</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Prediction: 30-Day Forecast -->
+<section class="stagger-in delay-4">
+<div class="glass-card rounded-3xl p-8 border-dashed border-2 border-primary/30 relative">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1">psychology</span>
+<h3 class="font-headline-lg text-headline-lg">30-Day Prediction</h3>
+</div>
+<div class="h-48 w-full bg-surface-container-lowest/50 rounded-2xl flex items-center justify-center border border-outline-variant relative overflow-hidden elevated-card">
+<!-- Faint Grid for Chart -->
+<div class="absolute inset-0 opacity-5 grid-dot"></div>
+<!-- Forecast Curve with Area Fill -->
+<svg class="w-full h-full" viewbox="0 0 800 150">
+<path d="M0,100 L200,80 L400,95 L600,60 L800,40" fill="none" stroke="var(--primary)" stroke-dasharray="8 4" stroke-width="2"></path>
+<path d="M0,100 L200,80 L400,95 L600,60 L800,40 V150 H0 Z" fill="var(--primary)" fill-opacity="0.05"></path>
+<circle cx="200" cy="80" fill="white" r="4" stroke="var(--primary)" stroke-width="2"></circle>
+<circle cx="400" cy="95" fill="white" r="4" stroke="var(--primary)" stroke-width="2"></circle>
+<circle cx="600" cy="60" fill="white" r="4" stroke="var(--primary)" stroke-width="2"></circle>
+<circle cx="800" cy="40" fill="var(--primary)" r="6"></circle>
+</svg>
+<div class="absolute top-4 right-4 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">PROJECTED PATH</div>
+</div>
+<p class="mt-6 text-body-md text-on-surface-variant italic border-l-4 border-primary/30 pl-4 bg-surface-container-low/30 py-4 rounded-r-xl">
+                    "Anticipated usage is expected to plateau as industrial cooling demands decrease in accordance with the upcoming quarterly production shift."
+                </p>
+</div>
+</section>
+<!-- Recommendation & Expected Improvement -->
+<section class="stagger-in delay-5 flex flex-col md:flex-row gap-6">
+<!-- AI Tip -->
+<div class="flex-1 p-8 rounded-3xl bg-primary text-on-primary shadow-2xl relative overflow-hidden group elevated-card">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-white">lightbulb</span>
+<span class="font-label-md text-label-md uppercase tracking-wider opacity-80">AI Recommendation</span>
+</div>
+<h4 class="font-headline-lg text-headline-lg mb-4">Adjust Irrigation Schedules</h4>
+<p class="text-on-primary/90 mb-6 leading-relaxed">
+                        Based on real-time soil moisture sensors and predicted localized rain, reducing manual irrigation by 15 minutes daily will maintain optimal health while saving significant reserves.
+                    </p>
+<button class="bg-white text-primary px-8 py-3 rounded-full font-bold hover:bg-surface-container-low active:scale-95 transition-all shadow-lg">
+                        Implement Automatically
+                    </button>
+</div>
+</div>
+<!-- Savings Card -->
+<div class="w-full md:w-72 p-8 rounded-3xl glass-card flex flex-col items-center justify-center text-center elevated-card border-secondary/20">
+<p class="text-on-secondary-fixed-variant font-label-md text-label-md uppercase mb-4 opacity-70">Expected Improvement</p>
+<div class="text-[64px] font-bold text-primary tracking-tight leading-none mb-2">22%</div>
+<p class="text-on-surface text-body-sm font-semibold">Potential Water Savings</p>
+<div class="mt-6 p-2 bg-surface-container-low/80 rounded-full w-full border border-outline-variant/30">
+<div class="h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(0,96,171,0.4)]" style="width: 22%"></div>
+</div>
+</div>
+</section>
+</article>
+<!-- Activity Ticker -->
+<div class="mt-20 stagger-in delay-5">
+<div class="flex items-center gap-4 bg-surface-container-highest/30 rounded-full py-2 px-6 border border-outline-variant/30 elevated-card">
+<span class="flex items-center gap-2 text-primary font-bold text-label-md">
+<span class="material-symbols-outlined text-sm">notifications_active</span>
+                RECENT ACTIVITY
+            </span>
+<div class="h-4 w-px bg-outline-variant/50"></div>
+<div class="flex-grow overflow-hidden whitespace-nowrap relative">
+<p class="text-body-sm text-on-surface-variant animate-pulse inline-block">
+                    Sensor Node #428 recalibrated successfully • Maintenance scheduled for District B • Peak usage window ending in 45m
+                </p>
+</div>
+</div>
+</div>
+<!-- Footer Visual -->
+<footer class="mt-20 pt-16 border-t border-outline-variant/50 text-center relative">
+<div class="flex justify-center mb-8">
+<div class="w-16 h-16 rounded-full bg-surface-container elevated-card flex items-center justify-center border border-white">
+<span class="material-symbols-outlined text-primary text-3xl">water_drop</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-label-md text-label-md mb-2 tracking-[0.2em]">TRANSPARENT WATER MANAGEMENT</p>
+<p class="text-body-sm text-outline/60">© 2024 AquaSense AI. Empowering sustainable water narratives through precision analytics.</p>
+</footer>
+</main>
+<!-- Bottom Nav (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 md:hidden bg-surface/90 backdrop-blur-lg border-t border-outline-variant shadow-xl rounded-t-2xl">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-[10px]">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary text-white rounded-full px-5 py-1 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-sm text-[10px]">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-sm text-[10px]">Alerts</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-[10px]">Settings</span>
+</button>
+</nav>
+<script>
+    const observerOptions = { threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationPlayState = 'running';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.stagger-in > *').forEach(el => {
+        el.style.animationPlayState = 'paused';
+        observer.observe(el);
+    });
+
+    const aiButton = document.querySelector('button');
+    if(aiButton) {
+        aiButton.addEventListener('click', () => {
+            const icon = aiButton.querySelector('.material-symbols-outlined');
+            if(icon) {
+                icon.style.transform = 'rotate(360deg)';
+                icon.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                setTimeout(() => icon.style.transform = '', 600);
+            }
+        });
+    }
+</script>
+</body></html>

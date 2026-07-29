@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>AquaSense AI - Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"secondary-container": "#d3e5f1", "on-primary-fixed": "#001c39", "secondary-fixed-dim": "#b7c9d5", "surface-tint": "#0060ab", "on-secondary-fixed": "#0c1e26", "surface-bright": "#f8f9ff", "on-surface-variant": "#404753", "surface-container-low": "#eff4ff", "on-primary-container": "#fdfcff", primary: "#005da7", "on-secondary-fixed-variant": "#384953", error: "#ba1a1a", "primary-fixed": "#d3e3ff", "tertiary-container": "#4779a0", "tertiary-fixed-dim": "#9bccf6", "surface-variant": "#d3e4fe", "on-secondary": "#ffffff", "outline-variant": "#c0c7d5", "surface-container-high": "#dce9ff", "surface-container": "#e5eeff", "on-tertiary": "#ffffff", "surface-dim": "#cbdbf5", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#0e4b6f", "on-error-container": "#93000a", "inverse-surface": "#213145", "on-surface": "#0b1c30", "on-tertiary-container": "#fcfcff", secondary: "#50616b", "on-primary-fixed-variant": "#004883", "surface-container-highest": "#d3e4fe", "on-primary": "#ffffff", "inverse-primary": "#a3c9ff", "primary-fixed-dim": "#a3c9ff", tertiary: "#2c6085", "on-error": "#ffffff", "on-background": "#0b1c30", "on-secondary-container": "#566771", "secondary-fixed": "#d3e5f1", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#eaf1ff", background: "#f8f9ff", "on-tertiary-fixed": "#001e30", surface: "#f8f9ff", "primary-container": "#0076d1", outline: "#707785", "tertiary-fixed": "#cbe6ff"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {base: "8px", gutter: "24px", "margin-desktop": "64px", "max-width": "1280px", "margin-mobile": "16px"}, fontFamily: {"headline-lg-mobile": ["Plus Jakarta Sans"], "label-md": ["JetBrains Mono"], "body-md": ["Inter"], "headline-xl": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "headline-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], headline: ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], body: ["Inter"], label: ["Jetbrains Mono"]}, fontSize: {"headline-lg-mobile": ["24px", {lineHeight: "32px", fontWeight: "600"}], "label-md": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600"}], "headline-sm": ["20px", {lineHeight: "28px", fontWeight: "500"}], "headline-md": ["24px", {lineHeight: "32px", fontWeight: "600"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .canvas-bg {
+            background: linear-gradient(180deg, #f8f9ff 0%, #eff4ff 100%);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        @media (min-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(12, 1fr);
+                gap: 24px;
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface sticky top-0 z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center w-full px-margin-mobile py-base max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A clean, professional headshot of a friendly user for a profile avatar. The background is a soft blue-grey gradient, and the lighting is bright and even, matching a modern corporate light-mode aesthetic. The individual has a welcoming expression, reflecting the 'Trusted Steward' brand personality of AquaSense AI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbZwG-ZgM8bV-KetV5e70rCP9uyYpH2JOlyqgBc-07XZz1onosqE-PLXQ93-XLujAOiFWRHGptY0kB9cLa7XodB22jswpylLMJjlB26vyHusNhpWUNZszNmAtu20TP1kl1hasCYCMCIRA7iJ4CHbd5Vtx-dkDTchsizrRNoWfbYZz__5k4UZtaYHfmSlWEpOZemY5-WXZyszhaXnpXvO8yI8Le6j9Gb4ONM0S6U0dV2gYQXzmmRgqT"/>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary">AquaSense AI</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-gutter pb-32">
+<!-- Bento Grid Layout -->
+<div class="bento-grid">
+<!-- Hero Card (Span full width on mobile, 8 cols on desktop) -->
+<section class="col-span-4 md:col-span-8 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant relative overflow-hidden flex flex-col md:flex-row gap-6 items-center">
+<!-- Atmospheric Background Detail -->
+<div class="absolute -right-10 -top-10 w-48 h-48 bg-primary-container opacity-10 rounded-full blur-3xl"></div>
+<div class="flex-1 z-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container mb-4">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-md text-label-md">Efficiency Leader</span>
+</div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-3">Your usage is 10% lower than last month. Great job!</h2>
+<p class="text-on-surface-variant font-body-md max-w-lg">Your consistent conservation efforts are making a significant impact on local water levels and your monthly bill.</p>
+</div>
+<div class="w-full md:w-1/3 aspect-square max-w-[200px] relative z-10">
+<img class="w-full h-full object-contain" data-alt="A vibrant, minimalist 3D illustration of a water droplet wearing a gold laurel wreath, surrounded by small celebratory sparkles and soft teal leaves. The style is soft, rounded, and corporate modern with high-key lighting and a pristine white and primary blue color palette. The image feels uplifting and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh9a6-GhHKKo_-5szv5xSb3j18mtk0jJ5tZz1BIOc0hkPLo8Vp1L0AcF5qlGuAPR_ywMP7-ycSgO3b9t_CEmh8H5u9QHogkhb0cy6u3AvOA_iPBsBxZlUvcRlz37vUh8TLncNEg1gugaQXPs-NPiT0qC7ZxKR4xGa8vIs9EuvwTO4ytZFMMGnUdlVRJWbqHg4fEnl8PAnNZgO_VQgn5xdaMYkleHOBIW0hJwEcERG9FLBJ6ZMMQnk-"/>
+</div>
+</section>
+<!-- Comparative Card (Span full width on mobile, 4 cols on desktop) -->
+<section class="col-span-4 md:col-span-4 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-fixed text-[28px]">groups</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Local Average</h3>
+</div>
+<div class="mb-6">
+<span class="text-[48px] font-bold text-primary tracking-tight">80%</span>
+<p class="text-on-surface-variant font-body-md">Your household uses less water than 80% of neighbors in your district.</p>
+</div>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[80%] rounded-full transition-all duration-1000"></div>
+</div>
+</section>
+<!-- Usage Pattern Card (Span 4 mobile, 6 desktop) -->
+<section class="col-span-4 md:col-span-6 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-[28px]">schedule</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Usage Pattern</h3>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md">Peak Found</span>
+</div>
+<p class="font-body-md text-on-surface mb-8">Most of your water is used in the morning between <span class="font-bold text-primary">7 AM and 9 AM</span>.</p>
+<!-- Visual Indicator (Simplified segmented progress) -->
+<div class="flex gap-2 h-8 mb-8">
+<div class="flex-1 bg-surface-container rounded-lg"></div>
+<div class="flex-1 bg-surface-container rounded-lg"></div>
+<div class="flex-1 bg-primary rounded-lg shadow-sm"></div>
+<div class="flex-1 bg-primary rounded-lg shadow-sm"></div>
+<div class="flex-1 bg-surface-container rounded-lg"></div>
+<div class="flex-1 bg-surface-container rounded-lg"></div>
+</div>
+<button class="w-full py-4 rounded-xl border border-primary text-primary font-label-md text-label-md hover:bg-primary-container/10 transition-colors active:scale-[0.98]">
+                    Optimize schedule
+                </button>
+</section>
+<!-- Forecast Card (Span 4 mobile, 6 desktop) -->
+<section class="col-span-4 md:col-span-6 bg-primary-container text-on-primary-container rounded-xl p-6 relative overflow-hidden">
+<!-- Abstract Wave Detail -->
+<div class="absolute bottom-0 left-0 right-0 opacity-10 pointer-events-none">
+<svg fill="currentColor" viewbox="0 0 400 100">
+<path d="M0 50 Q 100 0 200 50 T 400 50 V 100 H 0 Z"></path>
+</svg>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
+<span class="material-symbols-outlined text-white text-[28px]">trending_flat</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm">Next Month Forecast</h3>
+</div>
+<div class="mb-6">
+<span class="text-[40px] font-bold tracking-tight">Stable</span>
+<p class="text-on-primary-container/80 font-body-md mt-2">We expect your costs to stay the same based on current usage trends.</p>
+</div>
+<div class="bg-black/10 p-4 rounded-lg backdrop-blur-sm border border-white/10">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md opacity-80">Estimated Bill</span>
+<span class="font-headline-sm text-headline-sm">$42.50</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface-container shadow-[0_-4px_12px_0_rgba(0,0,0,0.05)] rounded-t-xl border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-label-md text-label-md mt-1">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="font-label-md text-label-md mt-1">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-md text-label-md mt-1">Community</span>
+</a>
+</nav>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('section');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body></html>

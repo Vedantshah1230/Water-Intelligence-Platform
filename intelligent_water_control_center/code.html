@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaSense AI | Intelligent Water Control Center</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#a3c9ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "secondary-fixed": "#93f2f2",
+                    "on-surface": "#121c28",
+                    "on-error": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#006e6e",
+                    "tertiary-container": "#424b50",
+                    "secondary": "#006a6a",
+                    "on-surface-variant": "#424750",
+                    "surface-variant": "#d9e3f4",
+                    "surface-container-high": "#dfe9fa",
+                    "surface": "#f8f9ff",
+                    "on-primary-container": "#8abcff",
+                    "tertiary-fixed-dim": "#bfc8ce",
+                    "secondary-fixed-dim": "#76d6d5",
+                    "on-secondary-fixed-variant": "#004f4f",
+                    "surface-bright": "#f8f9ff",
+                    "on-tertiary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-background": "#121c28",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#27609d",
+                    "tertiary-fixed": "#dbe4ea",
+                    "on-tertiary-fixed-variant": "#3f484d",
+                    "surface-container-low": "#eef4ff",
+                    "primary-container": "#004b87",
+                    "surface-dim": "#d1dbec",
+                    "on-primary-fixed-variant": "#004882",
+                    "on-tertiary-container": "#b2bbc0",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-surface": "#27313e",
+                    "error-container": "#ffdad6",
+                    "primary-fixed": "#d3e4ff",
+                    "primary": "#003461",
+                    "background": "#f8f9ff",
+                    "tertiary": "#2c3439",
+                    "primary-fixed-dim": "#a3c9ff",
+                    "surface-container-highest": "#d9e3f4",
+                    "outline": "#727781",
+                    "on-primary-fixed": "#001c38",
+                    "on-tertiary-fixed": "#141d21",
+                    "secondary-container": "#90efef",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#e5eeff",
+                    "outline-variant": "#c2c6d1",
+                    "on-secondary-fixed": "#002020"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "40px",
+                    "xs": "8px",
+                    "sm": "16px",
+                    "md": "24px",
+                    "gutter": "20px",
+                    "margin-mobile": "16px",
+                    "xl": "48px",
+                    "lg": "32px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Lexend"],
+                    "headline-lg": ["Lexend"],
+                    "label-sm": ["Inter"],
+                    "headline-sm": ["Lexend"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Lexend"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .reveal { animation: fadeInUp 0.6s ease-out forwards; }
+      .skeleton {
+        background: linear-gradient(90deg, #f0f4f8 25%, #e2e8f0 50%, #f0f4f8 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+      }
+      @keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden pb-20 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline shadow-sm">
+<div class="flex items-center gap-4">
+<span class="text-headline-sm font-headline-sm font-bold text-primary dark:text-inverse-primary">AquaSense AI</span>
+<nav class="hidden md:flex gap-6 ml-8">
+<a class="font-headline-md text-headline-md text-primary dark:text-primary-fixed-dim font-bold" href="#">Dashboard</a>
+<a class="font-headline-md text-headline-md text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high transition-colors" href="#">Insights</a>
+<a class="font-headline-md text-headline-md text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high transition-colors" href="#">Alerts</a>
+<a class="font-headline-md text-headline-md text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-high transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined p-2 rounded-full hover:bg-surface-container-high transition-colors text-primary" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined p-2 rounded-full hover:bg-surface-container-high transition-colors text-primary" data-icon="account_circle">account_circle</button>
+</div>
+</header>
+<main class="mt-16 max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-lg space-y-lg">
+<!-- Hero Section -->
+<section class="reveal grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<div class="lg:col-span-2 space-y-md">
+<div class="flex flex-col gap-2">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Good morning, Alex.</h1>
+<div class="flex items-center gap-3">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Your area's water situation is</span>
+<span class="px-4 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-md text-label-md uppercase tracking-wider">Safe</span>
+</div>
+</div>
+<!-- AI Recommendation Card -->
+<div class="glass-card border border-outline-variant rounded-xl p-md flex items-start gap-md shadow-sm">
+<div class="bg-primary-container p-3 rounded-lg">
+<span class="material-symbols-outlined text-on-primary-fixed" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-1">AI Smart Guidance</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Current supply is optimal. It's a great day for scheduled irrigation before 9 AM.</p>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="flex flex-wrap gap-sm">
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">report_problem</span>
+                        Report a Leak
+                    </button>
+<button class="flex items-center gap-2 px-6 py-3 border-2 border-secondary text-secondary rounded-lg font-label-md text-label-md hover:bg-secondary-container/20 transition-colors">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                        Optimize Schedule
+                    </button>
+<button class="flex items-center gap-2 px-6 py-3 bg-surface-container-high text-on-surface rounded-lg font-label-md text-label-md hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Monthly Report
+                    </button>
+</div>
+</div>
+<!-- Weather Widget -->
+<div class="bg-primary-container text-on-primary-fixed-variant rounded-xl p-md flex flex-col justify-between relative overflow-hidden h-full min-h-[220px]">
+<div class="relative z-10 flex justify-between items-start">
+<div>
+<p class="font-label-md text-label-md opacity-80 mb-1">Today's Weather</p>
+<h2 class="font-headline-lg text-headline-lg">Sunny, 24°C</h2>
+<p class="font-body-sm text-body-sm">Low Humidity • 10% Chance of rain</p>
+</div>
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<div class="relative z-10 flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full w-fit">
+<span class="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
+<span class="font-label-sm text-label-sm">Low Risk Level</span>
+</div>
+<!-- Ambient background glow -->
+<div class="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary-fixed-dim opacity-30 blur-3xl rounded-full"></div>
+</div>
+</section>
+<!-- Main Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Card 1: Water Level -->
+<div class="group reveal glass-card border border-outline-variant p-md rounded-xl space-y-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+<div class="flex justify-between items-center">
+<div class="bg-surface-container p-3 rounded-full group-hover:bg-primary-container group-hover:text-on-primary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm">Optimal</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-1">Water Level</h4>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary">85%</span>
+<span class="font-body-sm text-body-sm text-secondary">Full</span>
+</div>
+</div>
+<!-- Mini Progress -->
+<div class="w-full h-3 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary transition-all duration-1000" style="width: 85%"></div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Local supply is robust. Your neighborhood is well within safety margins.</p>
+<button class="w-full py-2 border border-outline text-primary rounded-lg font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">View Details</button>
+</div>
+<!-- Card 2: Reservoir -->
+<div class="group reveal glass-card border border-outline-variant p-md rounded-xl space-y-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1" style="animation-delay: 0.1s">
+<div class="flex justify-between items-center">
+<div class="bg-surface-container p-3 rounded-full group-hover:bg-primary-container group-hover:text-on-primary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="waves">waves</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full font-label-sm text-label-sm">Stable</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-1">Reservoir Status</h4>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary">72%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Capacity</span>
+</div>
+</div>
+<!-- Sparkline Simulation -->
+<div class="h-12 w-full flex items-end gap-1 px-1">
+<div class="flex-1 bg-primary/20 rounded-t-sm" style="height: 60%"></div>
+<div class="flex-1 bg-primary/30 rounded-t-sm" style="height: 65%"></div>
+<div class="flex-1 bg-primary/40 rounded-t-sm" style="height: 55%"></div>
+<div class="flex-1 bg-primary/50 rounded-t-sm" style="height: 72%"></div>
+<div class="flex-1 bg-primary/60 rounded-t-sm" style="height: 70%"></div>
+<div class="flex-1 bg-primary/70 rounded-t-sm" style="height: 75%"></div>
+<div class="flex-1 bg-primary rounded-t-sm" style="height: 72%"></div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Water supply is expected to remain stable for the next 18 days.</p>
+<button class="w-full py-2 border border-outline text-primary rounded-lg font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">Action Required?</button>
+</div>
+<!-- Card 3: Groundwater -->
+<div class="group reveal glass-card border border-outline-variant p-md rounded-xl space-y-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1" style="animation-delay: 0.2s">
+<div class="flex justify-between items-center">
+<div class="bg-surface-container p-3 rounded-full group-hover:bg-primary-container group-hover:text-on-primary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="nature">nature</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm">Recovering</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-1">Groundwater</h4>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary">Good</span>
+</div>
+</div>
+<!-- Circular Indicator Simulation -->
+<div class="flex justify-center py-2">
+<div class="relative w-16 h-16 rounded-full border-4 border-surface-variant flex items-center justify-center overflow-hidden">
+<div class="absolute bottom-0 w-full bg-secondary-fixed opacity-40 transition-all duration-1000" style="height: 68%"></div>
+<span class="material-symbols-outlined text-secondary text-xl relative z-10">forest</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Aquifer levels are recovering steadily after recent rainfall.</p>
+<button class="w-full py-2 border border-outline text-primary rounded-lg font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">Regional Map</button>
+</div>
+<!-- Card 4: Leakage (Skeleton Loading State Simulation) -->
+<div class="reveal glass-card border border-outline-variant p-md rounded-xl space-y-md hover:shadow-lg transition-all duration-300" style="animation-delay: 0.3s">
+<div class="flex justify-between items-center">
+<div class="bg-surface-container p-3 rounded-full">
+<span class="material-symbols-outlined text-primary" data-icon="security">security</span>
+</div>
+<div class="h-6 w-24 skeleton rounded-full"></div>
+</div>
+<div class="space-y-2">
+<div class="h-4 w-32 skeleton rounded"></div>
+<div class="h-10 w-48 skeleton rounded"></div>
+</div>
+<div class="h-4 w-full skeleton rounded"></div>
+<div class="h-10 w-full skeleton rounded-lg"></div>
+<!-- Overlay to simulate data arrival -->
+<div class="hidden absolute inset-0 bg-white p-md flex flex-col space-y-md rounded-xl" id="leak-data">
+<div class="flex justify-between items-center">
+<div class="bg-surface-container p-3 rounded-full">
+<span class="material-symbols-outlined text-primary" data-icon="verified_user">verified_user</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm">Healthy</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-1">Leakage Status</h4>
+<span class="font-headline-lg text-headline-lg text-primary">0 Detected</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Smart sensors show 100% network integrity in your immediate sector.</p>
+<button class="w-full mt-auto py-2 border border-outline text-primary rounded-lg font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">Run Diagnostics</button>
+</div>
+</div>
+<!-- Card 5: Rain Prediction -->
+<div class="group reveal glass-card border border-outline-variant p-md rounded-xl space-y-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1" style="animation-delay: 0.4s">
+<div class="flex justify-between items-center">
+<div class="bg-surface-container p-3 rounded-full group-hover:bg-primary-container group-hover:text-on-primary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="rainy">rainy</span>
+</div>
+<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full font-label-sm text-label-sm">Forecast</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-1">Rain Prediction</h4>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-primary">12mm</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">this weekend</span>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="flex-1 h-2 bg-surface-variant rounded-full"></div>
+<div class="flex-1 h-2 bg-surface-variant rounded-full"></div>
+<div class="flex-1 h-2 bg-primary rounded-full"></div>
+<div class="flex-1 h-2 bg-primary rounded-full"></div>
+<div class="flex-1 h-2 bg-surface-variant rounded-full"></div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Gentle showers expected this weekend, further boosting local reserves.</p>
+<button class="w-full py-2 border border-outline text-primary rounded-lg font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">Detailed Forecast</button>
+</div>
+<!-- Card 6: Consumption -->
+<div class="group reveal glass-card border border-outline-variant p-md rounded-xl space-y-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1" style="animation-delay: 0.5s">
+<div class="flex justify-between items-center">
+<div class="bg-surface-container p-3 rounded-full group-hover:bg-primary-container group-hover:text-on-primary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="trending_down">trending_down</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm">Efficient</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-1">Consumption</h4>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-secondary">-5%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">vs Average</span>
+</div>
+</div>
+<div class="bg-surface p-2 rounded-lg border border-outline-variant/30 flex items-center justify-between">
+<span class="font-label-sm text-label-sm opacity-60">Last 7 Days</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">insights</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Excellent job! You are using less water than the regional average this week.</p>
+<button class="w-full py-2 border border-outline text-primary rounded-lg font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors">Compare Stats</button>
+</div>
+</section>
+<!-- Secondary Section: Alerts & Map Integration -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- Recent Alerts Empty State -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-md flex flex-col items-center justify-center text-center space-y-sm min-h-[300px]">
+<div class="bg-surface-container-highest p-6 rounded-full mb-2">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant opacity-40">notifications_off</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary">All Clear</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs">No active alerts for your sector. Your water system is operating within normal parameters.</p>
+<button class="font-label-md text-label-md text-primary underline">View History</button>
+</div>
+<!-- Regional Map Feature -->
+<div class="relative group rounded-xl overflow-hidden shadow-sm h-[300px]">
+<div class="bg-cover bg-center w-full h-full transform group-hover:scale-105 transition-transform duration-700" data-alt="A sophisticated digital cartography map showing a suburban coastal neighborhood with glowing blue pulse indicators over key water infrastructure. The map uses a soft, light-mode palette with muted teals and greys, emphasizing the primary blue water network overlay. Highly modern and clean aesthetic with smooth rounded edges." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAKhEKFWS40z28sd24bqJ_zeGFcZyY0BDLKKPAsMxrNnJUkbtVOd92dA0Et07BjXBQ9GiJaA8jeLlYPSZ0mJXodIWg5LmHA8_3VfeTdstRcrzrDH4rjJXQFti5Ng3uSrBdPf3nuiVTqBSIbG9odEsbjHX-yO3cSTloMKqYJwa13hUhxbYJ0LpUsyae2lqU2B0NNuZo_swbsnazDUNWp5LQXZ9jPpDnmqtMu_CCx4DU9GmGSj10eUIY-')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-primary">Sector 7-B Map</h3>
+<p class="font-body-sm text-body-sm text-on-primary/80">Real-time infrastructure health</p>
+</div>
+<button class="p-3 bg-white text-primary rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">zoom_out_map</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface-container dark:bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_12px_0_rgba(0,52,97,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed rounded-full px-5 py-1 scale-90 duration-200 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-container px-5 py-1 hover:bg-surface-variant dark:hover:bg-tertiary-container rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-sm text-label-sm">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-container px-5 py-1 hover:bg-surface-variant dark:hover:bg-tertiary-container rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-label-sm text-label-sm">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-container px-5 py-1 hover:bg-surface-variant dark:hover:bg-tertiary-container rounded-full" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<!-- Floating Action Button (FAB) - Contextual -->
+<button class="fixed bottom-24 right-6 md:bottom-12 md:right-12 p-5 bg-primary text-on-primary rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all z-40 group">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">add</span>
+<span class="absolute right-full mr-4 bg-primary px-4 py-2 rounded-lg text-white font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap hidden md:block">New Simulation</span>
+</button>
+<script>
+        // Simulate data loading for the skeleton card
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const leakDataCard = document.getElementById('leak-data');
+                if (leakDataCard) {
+                    leakDataCard.classList.remove('hidden');
+                    leakDataCard.classList.add('reveal');
+                }
+            }, 2500);
+        });
+
+        // Add subtle scroll reveal logic
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body></html>

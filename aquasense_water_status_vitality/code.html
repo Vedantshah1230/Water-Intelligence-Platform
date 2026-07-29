@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaSense AI | Water Status</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#dce9ff",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#707785",
+                    "on-primary-fixed-variant": "#004883",
+                    "surface-bright": "#f8f9ff",
+                    "primary": "#005da7",
+                    "primary-fixed": "#d3e3ff",
+                    "on-tertiary-fixed": "#001e30",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#4779a0",
+                    "secondary": "#50616b",
+                    "on-surface-variant": "#404753",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#d3e4fe",
+                    "primary-fixed-dim": "#a3c9ff",
+                    "outline-variant": "#c0c7d5",
+                    "background": "#f8f9ff",
+                    "on-primary": "#ffffff",
+                    "tertiary": "#2c6085",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#0060ab",
+                    "surface": "#f8f9ff",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#d3e5f1",
+                    "tertiary-fixed-dim": "#9bccf6",
+                    "on-background": "#0b1c30",
+                    "on-secondary-fixed": "#0c1e26",
+                    "on-secondary-container": "#566771",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed-variant": "#384953",
+                    "on-primary-container": "#fdfcff",
+                    "secondary-fixed-dim": "#b7c9d5",
+                    "tertiary-fixed": "#cbe6ff",
+                    "on-tertiary-fixed-variant": "#0e4b6f",
+                    "on-tertiary-container": "#fcfcff",
+                    "surface-variant": "#d3e4fe",
+                    "primary-container": "#0076d1",
+                    "inverse-primary": "#a3c9ff",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container": "#e5eeff",
+                    "on-surface": "#0b1c30",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-dim": "#cbdbf5",
+                    "on-primary-fixed": "#001c39",
+                    "secondary-fixed": "#d3e5f1",
+                    "inverse-surface": "#213145",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "max-width": "1280px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-sm": ["Plus Jakarta Sans"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["JetBrains Mono"],
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .entrance-anim {
+            animation: slideUpFade 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+        }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .gauge-ring {
+            transition: stroke-dashoffset 1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-20 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16 bg-surface border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">waves</span>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary">AquaSense AI</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold transition-colors" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors px-3 py-1 rounded-lg" href="#">Insights</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors px-3 py-1 rounded-lg" href="#">Alerts</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors px-3 py-1 rounded-lg" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto mb-12">
+<!-- Hero Section -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center mb-16 entrance-anim">
+<div class="lg:col-span-7">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-md font-label-md flex items-center gap-2 overflow-hidden relative">
+<!-- STITCH_SHADER_START:ANIMATION_33 class="absolute inset-0 w-full h-full opacity-30" -->
+<div class="absolute inset-0 w-full h-full opacity-30" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_33" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_33');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create multiple overlapping wave layers for a "tank" fill effect
+    // We want the wave to be at a certain height (e.g., 0.7)
+    float height = 0.7 + sin(u_time * 1.2 + uv.x * 4.0) * 0.02;
+    float mask = step(uv.y, height);
+    
+    // Wave surface highlight
+    float surface = smoothstep(height - 0.01, height, uv.y) * mask;
+    
+    // Base water color (Cyan-Blue gradient)
+    vec3 waterColor = mix(vec3(0.0, 0.4, 0.8), vec3(0.3, 0.7, 1.0), uv.y / height);
+    vec3 surfaceColor = vec3(0.8, 0.95, 1.0);
+    
+    vec3 finalColor = mix(waterColor, surfaceColor, surface);
+    
+    // Bubbles
+    float bubbles = pow(max(0.0, sin(uv.x * 20.0 + u_time * 2.0) * cos(uv.y * 10.0 - u_time * 3.0)), 20.0) * 0.3;
+    finalColor += bubbles * mask;
+
+    gl_FragColor = vec4(finalColor, mask * 0.9); // Semi-transparent water
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_33 -->
+<span class="relative z-10">Network Status: Nominal</span>
+</span>
+</div>
+<h2 class="text-headline-xl font-headline-xl mb-6 text-on-background">System Vitality: <span class="text-primary">Excellent</span></h2>
+<p class="text-body-md text-on-surface-variant max-w-xl mb-8 leading-relaxed">
+                    The network is operating at optimal levels. All major reservoirs are in the <span class="font-bold text-primary">"Healthy"</span> zone, ensuring consistent supply for the entire metropolitan area.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95 shadow-md">
+<span class="material-symbols-outlined">analytics</span>
+                        View Detailed Report
+                    </button>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-xl font-bold hover:bg-surface-container-highest transition-all">
+                        Regional Comparisons
+                    </button>
+</div>
+</div>
+<div class="lg:col-span-5 relative h-[400px] flex items-center justify-center">
+<div class="absolute inset-0 bg-primary/5 rounded-[40px] blur-3xl"></div>
+<div class="relative w-full h-full bg-surface-container-lowest/40 backdrop-blur-md rounded-[40px] border border-white/50 shadow-2xl flex flex-col items-center justify-center overflow-hidden">
+<!-- STITCH_SHADER_START:ANIMATION_32 class="absolute inset-0 w-full h-full" -->
+<div class="absolute inset-0 w-full h-full" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_32" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_32');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Flowing water wave for a dashboard indicator
+    float wave = sin(uv.x * 6.0 + u_time * 2.0) * 0.1 + 0.5;
+    float mask = step(uv.y, wave);
+    
+    vec3 topColor = vec3(0.4, 0.8, 1.0);
+    vec3 bottomColor = vec3(0.0, 0.3, 0.6);
+    
+    vec3 finalColor = mix(bottomColor, topColor, uv.y / wave);
+    
+    gl_FragColor = vec4(finalColor, mask * 0.8);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_32 -->
+<div class="relative z-10 text-center">
+<div class="text-headline-xl font-headline-xl text-primary mb-1">94.2%</div>
+<div class="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Network Capacity</div>
+</div>
+<!-- Decorative HUD elements -->
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<div class="flex flex-col gap-1">
+<div class="w-24 h-1 bg-outline-variant rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[94%]"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-label-md">LIVE TELEMETRY</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 text-4xl">water_drop</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Indicators Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-16">
+<!-- Reservoir Status -->
+<div class="glass-card p-6 rounded-[32px] border border-white/40 shadow-sm entrance-anim stagger-1 group hover:shadow-xl transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-primary-fixed rounded-2xl text-primary">
+<span class="material-symbols-outlined text-3xl">home_storage</span>
+</div>
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary gauge-ring" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.9" stroke-dashoffset="21.1" stroke-width="4"></circle>
+</svg>
+<span class="absolute text-label-md font-bold text-primary">88%</span>
+</div>
+</div>
+<h3 class="text-headline-sm font-headline-sm mb-3">Reservoir Status</h3>
+<div class="mb-4 rounded-2xl overflow-hidden h-32 relative">
+<img class="w-full h-full object-cover" data-alt="A cinematic, high-angle landscape shot of a modern, eco-friendly water reservoir nestled in a lush green valley during the golden hour. The water is pristine and reflects a clear blue sky, with minimalist concrete infrastructure and sustainable architecture blending into the surrounding nature. The atmosphere is peaceful, professional, and reflects a sense of environmental harmony in a light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEZoR6A5_vv0rm8dSkjokPCDo9JIHOtSUPu7tVAQafNg_y1DWuv8I9Q-Ob3dzaRtBgrsZuJ3e6SQEmVPVAwxLRaqn9DnVS2ZaJod3Io-yVfyYjzFr-WAxkIkdvLVH7kWB0voolKwEdxBnsruqzco9BlmxmcehsvhR6AtRtxVfvFTVSP1Yt459_CASXmydqRDOABN53sPHyeTbzHowK8BV4MEHisrmeLT-MkD0D2QD-Wzlv75kslqIm"/>
+</div>
+<p class="text-body-sm text-on-surface-variant">
+                    Capacity is stable. Current levels are <span class="font-semibold text-primary">5% higher</span> than last year's seasonal average due to efficient catchment management.
+                </p>
+</div>
+<!-- Groundwater Health -->
+<div class="glass-card p-6 rounded-[32px] border border-white/40 shadow-sm entrance-anim stagger-2 group hover:shadow-xl transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-tertiary-fixed rounded-2xl text-tertiary">
+<span class="material-symbols-outlined text-3xl">layers</span>
+</div>
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span> Healthy
+                    </span>
+</div>
+<h3 class="text-headline-sm font-headline-sm mb-3">Groundwater Health</h3>
+<div class="mb-4 rounded-2xl overflow-hidden h-32 relative">
+<img class="w-full h-full object-cover" data-alt="A clean, scientific cross-section diagram showing layered geological strata with a clear, glowing blue aquifer beneath the earth's surface. Modern digital sensors are depicted as subtle glowing points in the soil layers, conveying advanced environmental monitoring. The style is minimalist and high-tech with soft blues and neutral greys, maintaining a breathable light-mode UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTIKAPDD-XR-Df9H8IOaEeZCLOp-P7NYKFNGgKorF5fluIAPuxnAEZBgyM_Ci6Ec2ZL5k2VRzFtRFp-ztPm3PY2EwlPe8OZ7Rpyx3DAAuG0CafnQYIAwBdlE80kd6y9z1M3S7UIYQN6dYjzDT9TZ7mVMuWXeVqihUBVOalT7SRLFsLWms_HK87sf8SjZiqBN6C6D5g_w3lG9vi_IM43xSUxPl1BNBDExR7xNDn25WzFUyOMEebsANW"/>
+</div>
+<p class="text-body-sm text-on-surface-variant">
+                    Natural recharge is expected to <span class="font-semibold text-tertiary">accelerate</span> after this weekend's predicted rainfall. All monitoring wells show rising water tables.
+                </p>
+</div>
+<!-- Interactive Gauge: Turbidity -->
+<div class="glass-card p-6 rounded-[32px] border border-white/40 shadow-sm entrance-anim stagger-3 group hover:shadow-xl transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-secondary-container rounded-2xl text-primary">
+<span class="material-symbols-outlined text-3xl">opacity</span>
+</div>
+</div>
+<h3 class="text-headline-sm font-headline-sm mb-3">Water Quality</h3>
+<div class="mb-6 flex flex-col items-center">
+<div class="text-headline-lg font-headline-lg text-primary">99.8%</div>
+<div class="text-label-md font-label-md text-on-surface-variant uppercase mb-4">Purity Index</div>
+<!-- Modern Gauge -->
+<div class="w-full h-4 bg-surface-container rounded-full overflow-hidden relative shadow-inner">
+<div class="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary-container transition-all duration-1000" style="width: 99.8%;"></div>
+<div class="absolute inset-y-0 right-0 w-[0.2%] bg-error"></div>
+</div>
+<div class="w-full flex justify-between mt-2 px-1">
+<span class="text-[10px] text-on-surface-variant font-label-md">0 NTU</span>
+<span class="text-[10px] text-on-surface-variant font-label-md">MAX SAFE LIMIT</span>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-2xl border border-outline-variant/30">
+<div class="flex items-center gap-2 mb-1 text-primary">
+<span class="material-symbols-outlined text-sm">verified</span>
+<span class="font-bold text-body-sm">Crystal Clear</span>
+</div>
+<p class="text-body-sm text-on-surface-variant leading-tight">
+                        Water remains well within international safety standards for turbidity and particulates.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Data & Predictions -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-20 entrance-anim stagger-4">
+<!-- Prediction Graph (Placeholder/Conceptual) -->
+<div class="lg:col-span-8 glass-card p-8 rounded-[32px] border border-white/40 shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div>
+<h3 class="text-headline-sm font-headline-sm">7-Day Supply Forecast</h3>
+<p class="text-body-sm text-on-surface-variant">Projected water availability based on usage trends and weather models.</p>
+</div>
+<div class="flex items-center bg-surface-container rounded-xl p-1">
+<button class="px-4 py-2 bg-white shadow-sm rounded-lg text-label-md font-bold text-primary">Volume</button>
+<button class="px-4 py-2 text-label-md font-bold text-on-surface-variant hover:text-primary transition-colors">Percentage</button>
+</div>
+</div>
+<div class="h-64 flex items-end gap-2 md:gap-4 px-2">
+<!-- Bars -->
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-surface-container-highest rounded-t-xl transition-all duration-500 hover:bg-primary/40 cursor-help relative" style="height: 70%;">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">7.2 GL</div>
+</div>
+<span class="mt-4 text-label-md font-label-md text-on-surface-variant">Mon</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-surface-container-highest rounded-t-xl transition-all duration-500 hover:bg-primary/40 cursor-help relative" style="height: 75%;"></div>
+<span class="mt-4 text-label-md font-label-md text-on-surface-variant">Tue</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-surface-container-highest rounded-t-xl transition-all duration-500 hover:bg-primary/40 cursor-help relative" style="height: 65%;"></div>
+<span class="mt-4 text-label-md font-label-md text-on-surface-variant">Wed</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-xl border-t-2 border-primary border-dashed cursor-help relative" style="height: 85%;">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded whitespace-nowrap">Peak Recharge</div>
+</div>
+<span class="mt-4 text-label-md font-label-md text-primary font-bold">Thu</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-xl border-t-2 border-primary border-dashed cursor-help relative" style="height: 92%;"></div>
+<span class="mt-4 text-label-md font-label-md text-on-surface-variant">Fri</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-xl border-t-2 border-primary border-dashed cursor-help relative" style="height: 90%;"></div>
+<span class="mt-4 text-label-md font-label-md text-on-surface-variant">Sat</span>
+</div>
+<div class="flex-1 flex flex-col items-center group">
+<div class="w-full bg-primary/20 rounded-t-xl border-t-2 border-primary border-dashed cursor-help relative" style="height: 88%;"></div>
+<span class="mt-4 text-label-md font-label-md text-on-surface-variant">Sun</span>
+</div>
+</div>
+</div>
+<!-- Recommendation & Comparison -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- AI Recommendation -->
+<div class="bg-primary p-6 rounded-[32px] text-on-primary shadow-lg shadow-primary/20 flex flex-col relative overflow-hidden">
+<div class="absolute top-0 right-0 p-8 opacity-10 scale-150 rotate-12">
+<span class="material-symbols-outlined text-[120px]">psychology</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-label-md font-bold uppercase tracking-widest">AquaSense Recommendation</span>
+</div>
+<h4 class="text-headline-sm font-headline-sm mb-4">Prime Irrigation Window</h4>
+<p class="text-body-md opacity-90 mb-6">
+                            Current supply is abundant and natural groundwater recharge is peaking. This is a great time for scheduled agricultural irrigation or heavy industrial operations.
+                        </p>
+<button class="w-full py-3 bg-white text-primary rounded-xl font-bold hover:bg-surface-bright transition-colors shadow-sm">
+                            Schedule Supply Release
+                        </button>
+</div>
+</div>
+<!-- Snapshot Comparisons -->
+<div class="flex-1 flex flex-col gap-4">
+<div class="glass-card p-4 rounded-2xl flex items-center justify-between border border-white/40">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div>
+<div class="text-label-sm font-bold text-on-surface-variant">VS. LAST WEEK</div>
+<div class="text-headline-sm font-headline-sm">+2.4%</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-green-500" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</div>
+<div class="glass-card p-4 rounded-2xl flex items-center justify-between border border-white/40">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">calendar_month</span>
+</div>
+<div>
+<div class="text-label-sm font-bold text-on-surface-variant">VS. LAST MONTH</div>
+<div class="text-headline-sm font-headline-sm">+12.1%</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-green-500" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface-container border-t border-outline-variant shadow-[0_-4px_12px_0_rgba(0,52,97,0.05)] rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:bg-surface-variant rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-sm text-label-sm">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:bg-surface-variant rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-sm text-label-sm">Alerts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:bg-surface-variant rounded-full transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions and animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Intersection Observer for entrance animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.entrance-anim').forEach(el => observer.observe(el));
+
+            // Small parallax or hover effect for cards
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+                });
+            });
+        });
+    </script>
+</body></html>
