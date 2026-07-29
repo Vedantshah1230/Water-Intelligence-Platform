@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import axios from 'axios';
+import { sendAlertEmail } from '../services/email';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -24,16 +25,24 @@ router.post('/data', async (req: Request, res: Response) => {
     const mlResult = mlResponse.data;
 
     // 3. Create an alert if leak is detected
-    if (mlResult.leak_detected) {
-      await prisma.alert.create({
-        data: {
-          type: 'Leak Detection',
-          severity: mlResult.risk_level,
-          location: `Sensor ${sensor_id}`,
-          status: 'Active'
+      if (mlResult.leak_detected) {
+        const alert = await prisma.alert.create({
+          data: {
+            type: "Leakage",
+            severity: mlResult.risk_level,
+            location: `Sensor ${sensor_id}`,
+            status: "Active"
+          }
+        });
+        
+        // Send Email Notification if risk is High or Critical
+        if (mlResult.risk_level === 'Critical' || mlResult.risk_level === 'High') {
+           await sendAlertEmail(
+             "CRITICAL LEAK DETECTED", 
+             `A ${mlResult.risk_level} leak was just detected at Sensor: ${sensor_id}. Confidence: ${mlResult.confidence_score}%. Please investigate immediately.`
+           );
         }
-      });
-    }
+      }
 
     res.json({ 
       message: 'Data processed', 
