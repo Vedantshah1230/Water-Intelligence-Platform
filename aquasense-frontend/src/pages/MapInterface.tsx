@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import { mockMapLocations } from '@/mock-data/map';
-import { Card, CardContent } from '@/components/ui/card';
-import { MapPin, Info } from 'lucide-react';
+import * as L from 'leaflet';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import api from '@/lib/api';
 
 // Fix Leaflet's default icon issue
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -18,9 +17,9 @@ L.Icon.Default.mergeOptions({
 
 const getMarkerColor = (status: string) => {
   switch (status) {
-    case 'Critical': return '#ba1a1a';
-    case 'Warning': return '#cc7700';
-    case 'Good': return '#0062a2';
+    case 'Pending': return '#ba1a1a'; // Red for unresolved issues
+    case 'Investigating': return '#cc7700'; // Orange
+    case 'Resolved': return '#0062a2'; // Blue
     default: return '#0062a2';
   }
 };
@@ -36,11 +35,28 @@ const createCustomIcon = (status: string) => {
   });
 };
 
+interface CitizenReport {
+  id: string;
+  title: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+  status: string;
+}
+
 export function MapInterface() {
+  const [reports, setReports] = useState<CitizenReport[]>([]);
+
+  useEffect(() => {
+    api.get('/advanced/citizen-report')
+      .then(res => setReports(res.data))
+      .catch(err => console.error("Failed to load map data", err));
+  }, []);
+
   return (
     <div className="animate-in fade-in duration-500 h-[calc(100vh-140px)] flex flex-col">
       <div className="flex justify-between items-center mb-gutter">
-        <h2 className="font-headline-lg text-primary">Interactive Map</h2>
+        <h2 className="font-headline-lg text-primary">Live Incident Map</h2>
         <div className="flex gap-2">
           <Button variant="outline" size="sm">Filters</Button>
           <Button variant="default" size="sm">Export</Button>
@@ -48,20 +64,20 @@ export function MapInterface() {
       </div>
       
       <Card className="flex-1 overflow-hidden relative border-none">
-        <MapContainer center={[34.0522, -118.2437]} zoom={11} className="w-full h-full z-0 rounded-xl">
+        <MapContainer center={[19.0760, 72.8777]} zoom={11} className="w-full h-full z-0 rounded-xl">
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {mockMapLocations.map(loc => (
-            <Marker key={loc.id} position={[loc.lat, loc.lng]} icon={createCustomIcon(loc.status)}>
+          {reports.map(report => (
+            <Marker key={report.id} position={[report.latitude, report.longitude]} icon={createCustomIcon(report.status)}>
               <Popup>
                 <div className="p-1 min-w-[150px]">
-                  <h3 className="font-headline-sm mb-1">{loc.name}</h3>
-                  <p className="font-label-md text-on-surface-variant mb-2">{loc.type}</p>
+                  <h3 className="font-headline-sm mb-1">{report.title}</h3>
+                  <p className="font-label-md text-on-surface-variant mb-2">{report.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className={cn("px-2 py-0.5 rounded text-xs font-bold text-white", loc.status === 'Critical' ? 'bg-error' : loc.status === 'Warning' ? 'bg-[#cc7700]' : 'bg-primary')}>
-                      {loc.status}
+                    <span className={cn("px-2 py-0.5 rounded text-xs font-bold text-white", report.status === 'Pending' ? 'bg-error' : report.status === 'Investigating' ? 'bg-[#cc7700]' : 'bg-primary')}>
+                      {report.status}
                     </span>
                     <Button variant="outline" size="sm" className="h-6 px-2 text-xs">Details</Button>
                   </div>
@@ -73,11 +89,11 @@ export function MapInterface() {
         
         {/* Floating Legend */}
         <div className="absolute bottom-6 left-6 z-10 bg-surface/90 backdrop-blur-md p-4 rounded-xl border border-outline-variant shadow-lg">
-          <h4 className="font-label-lg mb-2">Status Legend</h4>
+          <h4 className="font-label-lg mb-2">Issue Status</h4>
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 font-label-md"><div className="w-3 h-3 rounded-full bg-primary"></div> Good</div>
-            <div className="flex items-center gap-2 font-label-md"><div className="w-3 h-3 rounded-full bg-[#cc7700]"></div> Warning</div>
-            <div className="flex items-center gap-2 font-label-md"><div className="w-3 h-3 rounded-full bg-error"></div> Critical</div>
+            <div className="flex items-center gap-2 font-label-md"><div className="w-3 h-3 rounded-full bg-error"></div> Pending</div>
+            <div className="flex items-center gap-2 font-label-md"><div className="w-3 h-3 rounded-full bg-[#cc7700]"></div> Investigating</div>
+            <div className="flex items-center gap-2 font-label-md"><div className="w-3 h-3 rounded-full bg-primary"></div> Resolved</div>
           </div>
         </div>
       </Card>

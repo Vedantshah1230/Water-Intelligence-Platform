@@ -1,11 +1,29 @@
-import React from 'react';
-import { Droplet, ShieldCheck, ArrowRight, Lightbulb, AlertTriangle } from 'lucide-react';
-import { mockDashboardData } from '@/mock-data/dashboard';
+import React, { useState, useEffect } from 'react';
+import { Droplet, ShieldCheck, ArrowRight, Lightbulb, AlertTriangle, Activity } from 'lucide-react';
 import { StatusCard } from '@/components/shared/StatusCard';
 import { Button } from '@/components/ui/button';
+import api from '@/lib/api';
+
+interface DashboardStats {
+  totalSensors: number;
+  activeAlerts: number;
+  totalReservoirs: number;
+}
 
 export function Dashboard() {
-  const { waterStatus, dailyTip, groundwater, waterQuality } = mockDashboardData;
+  const [stats, setStats] = useState<DashboardStats>({
+    totalSensors: 0,
+    activeAlerts: 0,
+    totalReservoirs: 0
+  });
+
+  useEffect(() => {
+    api.get('/dashboard/stats')
+      .then(res => setStats(res.data))
+      .catch(err => console.error("Failed to load dashboard stats", err));
+  }, []);
+
+  const hasAlerts = stats.activeAlerts > 0;
 
   return (
     <div className="animate-in fade-in duration-500">
@@ -15,7 +33,9 @@ export function Dashboard() {
           <span className="text-3xl">👋</span>
           <h2 className="font-headline-lg-mobile md:font-headline-lg text-on-surface">Welcome back, Sam.</h2>
         </div>
-        <p className="font-body-md text-on-surface-variant">Water conditions are healthy today.</p>
+        <p className="font-body-md text-on-surface-variant">
+          {hasAlerts ? `You have ${stats.activeAlerts} active alerts.` : 'Water conditions are healthy today.'}
+        </p>
       </section>
 
       {/* Bento Grid Layout */}
@@ -27,28 +47,28 @@ export function Dashboard() {
             <div className="flex justify-between items-start mb-gutter">
               <div>
                 <p className="font-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Current Overall Status</p>
-                <h3 className="font-headline-lg text-primary">Water Status</h3>
+                <h3 className="font-headline-lg text-primary">System Health</h3>
               </div>
-              <span className="bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-label-md flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-secondary status-pulse"></span>
-                Healthy
+              <span className={`px-4 py-1 rounded-full font-label-md flex items-center gap-2 ${hasAlerts ? 'bg-error-container text-on-error-container' : 'bg-secondary-container text-on-secondary-container'}`}>
+                <span className={`w-2 h-2 rounded-full ${hasAlerts ? 'bg-error' : 'bg-secondary'} status-pulse`}></span>
+                {hasAlerts ? 'Alert Active' : 'Healthy'}
               </span>
             </div>
             <p className="font-body-md text-on-surface-variant max-w-md">
-              {waterStatus.summary}
+              Monitoring {stats.totalSensors} active IoT sensors across the city grid in real-time.
             </p>
           </div>
           
           <div className="mt-gutter flex items-end justify-between relative z-10">
             <div className="flex gap-4">
               <div className="flex flex-col">
-                <span className="font-headline-lg-mobile text-primary">{waterStatus.reservoirLevel}%</span>
-                <span className="font-label-md text-outline">Reservoir</span>
+                <span className="font-headline-lg-mobile text-primary">{stats.totalReservoirs}</span>
+                <span className="font-label-md text-outline">Reservoirs</span>
               </div>
               <div className="w-px h-10 bg-outline-variant"></div>
               <div className="flex flex-col">
-                <span className="font-headline-lg-mobile text-primary">{waterStatus.turbidity}</span>
-                <span className="font-label-md text-outline">Turbidity</span>
+                <span className="font-headline-lg-mobile text-primary">{stats.totalSensors}</span>
+                <span className="font-label-md text-outline">Sensors</span>
               </div>
             </div>
             <Button variant="default" size="sm">
@@ -70,8 +90,8 @@ export function Dashboard() {
             <div className="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center mb-gutter shadow-sm">
               <Lightbulb className="w-6 h-6 text-primary" />
             </div>
-            <h4 className="font-headline-lg-mobile mb-base">{dailyTip.title}</h4>
-            <p className="font-body-md opacity-90">{dailyTip.description}</p>
+            <h4 className="font-headline-lg-mobile mb-base">AI Insight</h4>
+            <p className="font-body-md opacity-90">Based on your consumption trends, you can reduce waste by 15%.</p>
           </div>
           <button className="mt-gutter font-label-md text-on-tertiary-fixed-variant flex items-center gap-2 group font-semibold">
             Learn more 
@@ -82,22 +102,22 @@ export function Dashboard() {
         {/* Metric Cards */}
         <StatusCard 
           className="md:col-span-6"
-          title={groundwater.title}
-          value={groundwater.status}
-          status={groundwater.status === 'Good' ? 'Good' : 'Warning'}
-          description={groundwater.description}
-          actionLabel={groundwater.actionLabel}
-          icon={Droplet}
+          title="Active Alerts"
+          value={stats.activeAlerts.toString()}
+          status={stats.activeAlerts > 0 ? 'Critical' : 'Good'}
+          description={hasAlerts ? 'AI detected anomalies needing attention.' : 'No active anomalies detected.'}
+          actionLabel="View Alerts"
+          icon={Activity}
         />
         
         <StatusCard 
           className="md:col-span-6"
-          title={waterQuality.title}
-          value={waterQuality.status === 'Good' ? 'Excellent' : 'Poor'}
-          status={waterQuality.status === 'Good' ? 'Good' : 'Critical'}
-          description={waterQuality.description}
-          actionLabel={waterQuality.actionLabel}
-          icon={ShieldCheck}
+          title="Reservoir Capacity"
+          value={stats.totalReservoirs.toString()}
+          status="Good"
+          description="Total active reservoirs currently monitored."
+          actionLabel="View details"
+          icon={Droplet}
         />
       </div>
 

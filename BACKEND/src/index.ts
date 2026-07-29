@@ -20,8 +20,13 @@ import reservoirRoutes from './routes/reservoir';
 import consumptionRoutes from './routes/consumption';
 import advancedRoutes from './routes/advanced';
 import groundwaterRoutes from './routes/groundwater';
+import alertsRoutes from './routes/alerts';
+import { PrismaClient } from '@prisma/client';
+import { getWeatherData } from './services/weather';
 import cron from 'node-cron';
 import axios from 'axios';
+
+const prisma = new PrismaClient();
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -31,15 +36,11 @@ app.use('/api/reservoirs', reservoirRoutes);
 app.use('/api/consumption', consumptionRoutes);
 app.use('/api/advanced', advancedRoutes);
 app.use('/api/groundwater', groundwaterRoutes);
+app.use('/api/alerts', alertsRoutes);
 
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', message: 'AquaSense AI Backend is running' });
 });
-
-import { PrismaClient } from '@prisma/client';
-import { getWeatherData } from './services/weather';
-
-const prisma = new PrismaClient();
 
 // Automated Agent: Runs every hour (using * * * * * for testing purposes so it runs every minute in dev)
 cron.schedule('* * * * *', async () => {
