@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaSense AI - Alerts</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#4779a0",
+                        "on-tertiary-fixed-variant": "#0e4b6f",
+                        "on-background": "#0b1c30",
+                        "on-secondary-fixed-variant": "#384953",
+                        "secondary-fixed": "#d3e5f1",
+                        "primary-container": "#0076d1",
+                        "surface-tint": "#0060ab",
+                        "secondary": "#50616b",
+                        "tertiary-fixed-dim": "#9bccf6",
+                        "tertiary-fixed": "#cbe6ff",
+                        "on-tertiary-container": "#fcfcff",
+                        "background": "#f8f9ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#566771",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed-variant": "#004883",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-container": "#d3e5f1",
+                        "on-tertiary-fixed": "#001e30",
+                        "surface-container-low": "#eff4ff",
+                        "primary-fixed": "#d3e3ff",
+                        "on-surface-variant": "#212733", /* Increased contrast from #404753 */
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "inverse-primary": "#a3c9ff",
+                        "surface-dim": "#cbdbf5",
+                        "on-secondary-fixed": "#0c1e26",
+                        "surface-container": "#e5eeff",
+                        "outline": "#404753", /* Increased contrast from #707785 */
+                        "outline-variant": "#b0b7c5",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-primary-container": "#fdfcff",
+                        "on-error-container": "#600004", /* Increased contrast from #93000a */
+                        "error": "#ba1a1a",
+                        "primary": "#005da7",
+                        "on-surface": "#0b1c30",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-fixed-dim": "#b7c9d5",
+                        "on-primary-fixed": "#001c39",
+                        "tertiary": "#2c6085",
+                        "surface-variant": "#d3e4fe",
+                        "primary-fixed-dim": "#a3c9ff",
+                        "warning": "#92400E", /* Darker amber for contrast */
+                        "warning-container": "#FEF3C7",
+                        "info": "#1E40AF", /* Darker blue for contrast */
+                        "info-container": "#DBEAFE",
+                        "success": "#065F46", /* Darker green for contrast */
+                        "success-container": "#D1FAE5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "base": "8px",
+                        "max-width": "1280px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "18px", "fontWeight": "700"}], /* Increased size and weight */
+                        "headline-lg-mobile": ["26px", {"lineHeight": "34px", "fontWeight": "700"}], /* Increased size and weight */
+                        "headline-xl": ["42px", {"lineHeight": "50px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["18px", {"lineHeight": "26px", "fontWeight": "400"}], /* Increased size */
+                        "body-sm": ["16px", {"lineHeight": "24px", "fontWeight": "400"}] /* Increased size */
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95); /* Increased opacity for readability */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        @keyframes pulse-critical {
+            0% { box-shadow: 0 0 0 0 rgba(186, 26, 26, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(186, 26, 26, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(186, 26, 26, 0); }
+        }
+
+        @keyframes pulse-warning {
+            0% { box-shadow: 0 0 0 0 rgba(146, 64, 14, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(146, 64, 14, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(146, 64, 14, 0); }
+        }
+
+        .animate-pulse-critical {
+            animation: pulse-critical 2s infinite;
+        }
+
+        .animate-pulse-warning {
+            animation: pulse-warning 2s infinite;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-32">
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-xl border-b border-outline-variant/30">
+<div class="flex justify-between items-center px-margin-mobile h-20 w-full max-w-max-width mx-auto">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">AquaSense AI</h1>
+</div>
+<button aria-label="Settings" class="w-12 h-12 flex items-center justify-center hover:bg-primary-container/20 rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary text-2xl">settings</span>
+</button>
+</div>
+</header>
+<main class="pt-24 px-margin-mobile max-w-lg mx-auto">
+<header class="mb-8">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background">System Alerts</h2>
+<p class="font-body-md text-on-surface-variant mt-1">Real-time infrastructure and quality updates</p>
+</header>
+<!-- Alerts Container -->
+<div class="space-y-6">
+<!-- Critical Alert -->
+<div class="glass-card border-2 border-error rounded-2xl p-5 animate-pulse-critical overflow-hidden relative shadow-md">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden shadow-sm bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-3xl" style="font-variation-settings: 'FILL' 1;">error</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<span class="flex items-center gap-1 font-label-md text-label-md text-error bg-error-container px-2.5 py-1 rounded-md uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[16px]">dangerous</span>
+                                Critical
+                            </span>
+<span class="font-label-md text-label-md text-on-surface-variant font-bold">2m ago</span>
+</div>
+<h3 class="font-headline-lg-mobile text-[20px] leading-tight text-on-surface font-extrabold">Emergency: Major Pipe Leak</h3>
+<p class="font-body-md text-on-surface-variant mt-2 leading-relaxed">Major water loss detected. District pressure is critically low.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-5">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline/30">
+<p class="font-label-md text-[11px] text-outline uppercase font-bold">Location</p>
+<p class="font-body-md font-bold text-on-surface">North District</p>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline/30">
+<p class="font-label-md text-[11px] text-outline uppercase font-bold">Affected</p>
+<p class="font-body-md font-bold text-on-surface">5,000 Homes</p>
+</div>
+</div>
+<div class="mb-5 bg-error-container/30 p-4 rounded-lg border-l-4 border-error">
+<p class="font-label-md text-[11px] text-error uppercase font-extrabold mb-1">Required Action</p>
+<p class="font-body-md text-on-surface font-bold">Send Emergency Repair Team immediately</p>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-error text-white font-body-md font-bold py-4 rounded-xl active:scale-95 transition-transform shadow-lg">Resolve Issue</button>
+<button class="flex-1 bg-surface-container-highest text-on-surface font-body-md font-bold py-4 rounded-xl active:scale-95 transition-transform border border-outline/20">Notify Team</button>
+</div>
+</div>
+<!-- Warning Alert -->
+<div class="glass-card border-2 border-warning rounded-2xl p-5 animate-pulse-warning overflow-hidden relative shadow-md">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden shadow-sm bg-warning-container flex items-center justify-center">
+<span class="material-symbols-outlined text-warning text-3xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<span class="flex items-center gap-1 font-label-md text-label-md text-warning bg-warning-container px-2.5 py-1 rounded-md uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[16px]">report_problem</span>
+                                Warning
+                            </span>
+<span class="font-label-md text-label-md text-on-surface-variant font-bold">45m ago</span>
+</div>
+<h3 class="font-headline-lg-mobile text-[20px] leading-tight text-on-surface font-extrabold">Low Reservoir Supply</h3>
+<p class="font-body-md text-on-surface-variant mt-2 leading-relaxed">Water levels at 15% due to seasonal shortage.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-5">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline/30">
+<p class="font-label-md text-[11px] text-outline uppercase font-bold">Location</p>
+<p class="font-body-md font-bold text-on-surface">Central Basin</p>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline/30">
+<p class="font-label-md text-[11px] text-outline uppercase font-bold">Risk Level</p>
+<p class="font-body-md font-bold text-on-surface">Planned Outages</p>
+</div>
+</div>
+<div class="mb-5 bg-warning-container/30 p-4 rounded-lg border-l-4 border-warning">
+<p class="font-label-md text-[11px] text-warning uppercase font-extrabold mb-1">Required Action</p>
+<p class="font-body-md text-on-surface font-bold">Start Conservation Stage 2</p>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-warning text-white font-body-md font-bold py-4 rounded-xl active:scale-95 transition-transform shadow-lg">See Details</button>
+<button class="flex-1 border-2 border-warning text-warning font-body-md font-bold py-4 rounded-xl active:scale-95 transition-transform">Notify Team</button>
+</div>
+</div>
+<!-- Information Alert -->
+<div class="glass-card border-2 border-info rounded-2xl p-5 overflow-hidden relative shadow-sm">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden shadow-sm bg-info-container flex items-center justify-center">
+<span class="material-symbols-outlined text-info text-3xl" style="font-variation-settings: 'FILL' 1;">info</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<span class="flex items-center gap-1 font-label-md text-label-md text-info bg-info-container px-2.5 py-1 rounded-md uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[16px]">info</span>
+                                Info
+                            </span>
+<span class="font-label-md text-label-md text-on-surface-variant font-bold">2h ago</span>
+</div>
+<h3 class="font-headline-lg-mobile text-[20px] leading-tight text-on-surface font-extrabold">Planned Sensor Check</h3>
+<p class="font-body-md text-on-surface-variant mt-2 leading-relaxed">Routine maintenance starting shortly.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-5">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline/30">
+<p class="font-label-md text-[11px] text-outline uppercase font-bold">Area</p>
+<p class="font-body-md font-bold text-on-surface">Marina Sector</p>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline/30">
+<p class="font-label-md text-[11px] text-outline uppercase font-bold">Impact</p>
+<p class="font-body-md font-bold text-on-surface">Delayed Data</p>
+</div>
+</div>
+<button class="w-full bg-info text-white font-body-md font-bold py-4 rounded-xl active:scale-95 transition-transform shadow-md">See Details</button>
+</div>
+<!-- Safe Status -->
+<div class="glass-card border-2 border-success rounded-2xl p-5 overflow-hidden relative shadow-sm">
+<div class="flex items-start gap-4 mb-4">
+<div class="w-16 h-16 shrink-0 rounded-xl overflow-hidden shadow-sm bg-success-container flex items-center justify-center">
+<span class="material-symbols-outlined text-success text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<span class="flex items-center gap-1 font-label-md text-label-md text-success bg-success-container px-2.5 py-1 rounded-md uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                                Optimal
+                            </span>
+<span class="font-label-md text-label-md text-on-surface-variant font-bold">Active</span>
+</div>
+<h3 class="font-headline-lg-mobile text-[20px] leading-tight text-on-surface font-extrabold">Water Quality is High</h3>
+<p class="font-body-md text-on-surface-variant mt-2 leading-relaxed">Current purity levels are excellent across the city.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-5">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline/30">
+<p class="font-label-md text-[11px] text-outline uppercase font-bold">Scope</p>
+<p class="font-body-md font-bold text-on-surface">City-wide</p>
+</div>
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline/30">
+<p class="font-label-md text-[11px] text-outline uppercase font-bold">Health</p>
+<p class="font-body-md font-bold text-on-surface">Excellent</p>
+</div>
+</div>
+<button class="w-full bg-success text-white font-body-md font-bold py-4 rounded-xl active:scale-95 transition-transform shadow-md">See Details</button>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/95 backdrop-blur-xl flex justify-around items-center px-4 py-3 pb-8 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] border-t border-outline-variant/50">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150 gap-1">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+<span class="font-label-md text-[12px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary font-bold bg-primary-container/20 rounded-2xl px-6 py-2 transition-all active:scale-90 duration-150 gap-1">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-label-md text-[12px] font-extrabold">Alerts</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150 gap-1">
+<span class="material-symbols-outlined text-2xl">analytics</span>
+<span class="font-label-md text-[12px] font-bold">Data</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all active:scale-90 duration-150 gap-1">
+<span class="material-symbols-outlined text-2xl">groups</span>
+<span class="font-label-md text-[12px] font-bold">Staff</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.transform = 'scale(0.96)';
+            });
+            btn.addEventListener('touchend', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+
+        // Dynamic backdrop shift on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md');
+                header.classList.remove('border-b-transparent');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body></html>

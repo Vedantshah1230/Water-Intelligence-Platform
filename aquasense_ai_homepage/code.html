@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaSense AI - A Future Where Every Drop Counts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed-variant": "#004883", "on-primary-container": "#fdfcff", "on-primary-fixed": "#001c39", "surface-tint": "#0060ab", "on-background": "#0b1c30", "surface-container-low": "#eff4ff", "surface-container-highest": "#d3e4fe", surface: "#f8f9ff", "on-secondary": "#ffffff", "surface-dim": "#cbdbf5", "surface-container": "#e5eeff", "on-error": "#ffffff", secondary: "#50616b", outline: "#707785", primary: "#005da7", "on-secondary-fixed": "#0c1e26", "tertiary-fixed": "#cbe6ff", "primary-fixed": "#d3e3ff", "secondary-fixed": "#d3e5f1", "outline-variant": "#c0c7d5", "on-tertiary-fixed": "#001e30", "error-container": "#ffdad6", "primary-container": "#0076d1", "on-surface-variant": "#404753", "tertiary-fixed-dim": "#9bccf6", "surface-container-high": "#dce9ff", "surface-bright": "#f8f9ff", "tertiary-container": "#4779a0", background: "#f8f9ff", "on-primary": "#ffffff", "on-tertiary-fixed-variant": "#0e4b6f", "on-tertiary-container": "#fcfcff", "on-tertiary": "#ffffff", error: "#ba1a1a", tertiary: "#2c6085", "secondary-fixed-dim": "#b7c9d5", "inverse-on-surface": "#eaf1ff", "inverse-surface": "#213145", "on-error-container": "#93000a", "primary-fixed-dim": "#a3c9ff", "secondary-container": "#d3e5f1", "on-secondary-container": "#566771", "surface-container-lowest": "#ffffff", "on-secondary-fixed-variant": "#384953", "inverse-primary": "#a3c9ff", "surface-variant": "#d3e4fe", "on-surface": "#0b1c30"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"margin-desktop": "64px", base: "8px", gutter: "24px", "margin-mobile": "16px", "max-width": "1280px"}, fontFamily: {"headline-lg": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "body-md": ["Inter"], "label-md": ["JetBrains Mono"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-sm": ["Inter"], headline: ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], body: ["Inter"], label: ["Jetbrains Mono"]}, fontSize: {"headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600"}], "headline-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", fontWeight: "500"}], "headline-lg-mobile": ["24px", {lineHeight: "32px", fontWeight: "600"}], "body-sm": ["14px", {lineHeight: "20px", fontWeight: "400"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(224, 242, 254, 1);
+        }
+        .hydraulic-shadow {
+            box-shadow: 0 10px 30px -10px rgba(0, 145, 255, 0.15);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container font-body-md overflow-x-hidden">
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-4 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<span class="font-headline-lg text-headline-lg-mobile md:text-headline-lg font-semibold text-primary">AquaSense AI</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-label-md font-label-md text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-label-md font-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Alerts</a>
+<a class="text-label-md font-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Insights</a>
+<a class="text-label-md font-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Community</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden ring-2 ring-primary/10">
+<img alt="User avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTA0ETUzAZ1V3z4j6u05p3SkKNjgOfQlbUFENPog80YIhslghLz01cHTkGqG_0r1IFjAMAYySnnqRUwKRj7Cz-RQeXZ88GAB0wQDWxuLzA2QqFB_AYOqFKJEjtoJ3KBe_8GX2-myGN3x4sgC67mkxLDh4QHdwvkijCQLDOjREopvEY1L1z0mSVOsWfBLIvAywAzL57t1jijdA2NFb4OhPsvPCqJqOXpr9cIZLa-UWuCpbTOgnJjAHc"/>
+</div>
+</div>
+</div>
+</header>
+<main>
+<section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+<!-- STITCH_SHADER_START:ANIMATION_12 class="absolute inset-0 w-full h-full z-0 opacity-40" -->
+<div class="absolute inset-0 w-full h-full z-0 opacity-40" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_12" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_12');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Create multiple overlapping wave layers
+    float wave1 = sin(uv.x * 3.0 + u_time * 0.5) * 0.05;
+    float wave2 = sin(uv.x * 5.0 - u_time * 0.8 + 1.5) * 0.03;
+    float wave3 = sin(uv.y * 2.0 + u_time * 0.3) * 0.02;
+    
+    float totalWave = wave1 + wave2 + wave3;
+    
+    // Base color gradient (Soft Light Blue to White)
+    vec3 color1 = vec3(0.9, 0.95, 1.0); // Very light blue
+    vec3 color2 = vec3(0.7, 0.85, 1.0); // Soft sky blue
+    
+    vec3 finalColor = mix(color1, color2, uv.y + totalWave);
+    
+    // Add subtle "sparkle" or light reflection
+    float sparkle = pow(max(0.0, sin(uv.x * 20.0 + uv.y * 20.0 + u_time)), 40.0) * 0.2;
+    finalColor += sparkle;
+
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_12 -->
+<div class="relative z-10 max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full">
+<div class="reveal active">
+<span class="inline-block py-1 px-4 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md mb-6">
+                        Intelligent Resource Management
+                    </span>
+<h1 class="font-headline-xl text-[48px] md:text-[64px] leading-tight mb-6 text-on-background">
+                        A Future Where <br/><span class="text-primary">Every Drop Counts</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mb-10 max-w-xl leading-relaxed">
+                        Experience the harmony of nature and intelligence. AquaSense AI helps communities, farmers, and cities understand and protect our most precious resource.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="px-8 py-4 bg-primary text-on-primary rounded-full font-semibold hover:bg-primary-container transition-all active:scale-95 hydraulic-shadow">
+                            Get Started
+                        </button>
+<button class="px-8 py-4 border-2 border-primary text-primary rounded-full font-semibold hover:bg-surface-container-low transition-all active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined">play_circle</span>
+                            Watch the Story
+                        </button>
+</div>
+</div>
+<div class="relative reveal active hidden lg:block">
+<div class="floating">
+<img alt="AI Assistant helping people manage water" class="w-full max-w-2xl drop-shadow-2xl rounded-3xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFGvYIQVqplz-QsHum442QW_c65DiMKl0_kvhUv4pV7gaLpZ0qwtAjvpiJlroXGtiIcSocbJ6nXF-jxU_KOJJpn3nWUeu8iash2_s-Yy2gSQHFDiQpQKJVdcMKppKQKK-B0A3S08bmzeKhpYgpYtFnqtOGb3Z33hsj7G6PygtMLNMr3TjSOv-VfJfd9zRgplIl2GiamBGmwB6k-B-4FFCF3EkPN3NbqYagfTbykgNEVeyXOcba3gJz"/>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 relative bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="glass-card rounded-3xl p-12 hydraulic-shadow grid grid-cols-2 md:grid-cols-4 gap-8 text-center reveal">
+<div>
+<div class="text-primary font-headline-xl text-headline-xl mb-2">1.2B</div>
+<div class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">Liters Saved</div>
+</div>
+<div>
+<div class="text-primary font-headline-xl text-headline-xl mb-2">450+</div>
+<div class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">Cities Connected</div>
+</div>
+<div>
+<div class="text-primary font-headline-xl text-headline-xl mb-2">15k+</div>
+<div class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">Predictions Made</div>
+</div>
+<div>
+<div class="text-primary font-headline-xl text-headline-xl mb-2">2.8k</div>
+<div class="text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">Reservoirs Monitored</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16 reveal">
+<h2 class="font-headline-lg text-headline-lg mb-4">Our Impact, Your Story</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
+                        Technology that feels human, protecting the ecosystems we depend on through four core pillars of innovation.
+                    </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap- gutter reveal">
+<div class="bg-surface p-8 rounded-3xl border border-outline-variant hover:border-primary transition-all duration-300 group hover:translate-y-[-8px] hydraulic-shadow h-full flex flex-col">
+<div class="mb-6 overflow-hidden rounded-2xl bg-surface-container">
+<div class="w-full h-48 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" data-alt="A 3D stylized close-up of a human hand gently cradling a crystalline, glowing blue water drop. The lighting is soft and ethereal, emphasizing the purity and fragility of the water. The background is a warm, minimalist cream tone, matching a sophisticated digital art aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBnUgmHB1ZoAs4M-YBkKG-XVnkmc5U2GirLJ76__pKCEf2ul9ZAjFGcQ4xBZZ8eMdnsQeMWgzT424rAiOWUAGjJ12uDPOIH8yGsiuAeXXCkYOVIlv2yYWBzkIoqLlGLycCbabjOxUUu7q7lhbdX2jElI4-2x589PaUM--Xgb3mEE5iL2B1dKmXV6ixqdAq5YIVyrdFKDTywEbSba3OfK2xj63D20eq-sKe5MnR8pYmAG2hjmXvUjYf3')"></div>
+</div>
+<h3 class="font-headline-lg text-[24px] mb-3 text-on-background">Building Trust</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            Transparent data sharing between citizens and authorities to foster mutual accountability.
+                        </p>
+</div>
+<div class="bg-surface p-8 rounded-3xl border border-outline-variant hover:border-primary transition-all duration-300 group hover:translate-y-[-8px] hydraulic-shadow h-full flex flex-col">
+<div class="mb-6 overflow-hidden rounded-2xl bg-surface-container">
+<div class="w-full h-48 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" data-alt="A futuristic digital plant made of glowing neural network lines and circuit patterns being watered by a transparent 3D watering can. The visual style is minimalist and high-tech, using soft blue and amber lights against a warm terracotta-toned studio background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA6R_NRdRHIZT74Z-yDqWdC9KcI_JfHY7acARHTUtm1FG0BQm0uwedl5sfub81QmWDztDpe07b6yQ0xZ9RyI71qv9an0Di-6sTnrHIvnDSKMt6MeeA9vFMmnyXTCCOBXcl0q9JKOeWABQ05308OT2W9RbJuht-Pi2ia9DaN6BxEFxi6YySCl_SfDDVQsVjIxpQptf1xD_kzPjAvYjdWlCW0q0gn6uFgFJ6siUt5YjBN9WvFP3_SwGva')"></div>
+</div>
+<h3 class="font-headline-lg text-[24px] mb-3 text-on-background">Fueling Growth</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            Optimizing irrigation and resource allocation to support sustainable agricultural and urban development.
+                        </p>
+</div>
+<div class="bg-surface p-8 rounded-3xl border border-outline-variant hover:border-primary transition-all duration-300 group hover:translate-y-[-8px] hydraulic-shadow h-full flex flex-col">
+<div class="mb-6 overflow-hidden rounded-2xl bg-surface-container">
+<div class="w-full h-48 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" data-alt="A perfectly circular view of a serene mountain lake at twilight under a full moon. The water is glassy and reflective, symbolizing peace and stability. The colors are deep blues and soft greys with a subtle glow on the horizon, following a clean, modern aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA4M9UtudESdl0P0zztJDdUPLeo37ru-8raQU_dfZ_qpfy0oJTvRpXrO45w4roH-bblEuJZc3B1ZkocU2lG7JaVONYdeyCOzKN1xZGHWavNLusrExXlyU5Rtd9dIute-9pA3G8ano455v3ahSiK9TteIDEMqptYEqsXE5oXnoruB43CmlF1fe5IAFtfnKKbHzlou9o64BFotCxhwIY5FJTe5dVBOH9FTCSv68CL1v8sosjHPabtp3cG')"></div>
+</div>
+<h3 class="font-headline-lg text-[24px] mb-3 text-on-background">Ensuring Stability</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            Predictive analytics that forecast seasonal shifts and prevent water shortages before they happen.
+                        </p>
+</div>
+<div class="bg-surface p-8 rounded-3xl border border-outline-variant hover:border-primary transition-all duration-300 group hover:translate-y-[-8px] hydraulic-shadow h-full flex flex-col">
+<div class="mb-6 overflow-hidden rounded-2xl bg-surface-container">
+<div class="w-full h-48 bg-cover bg-center group-hover:scale-110 transition-transform duration-500" data-alt="A glowing 3D visualization of a human brain formed by interconnected nodes and digital light filaments. The structure pulses with soft cyan and golden light, set against a warm, neutral background. The style is technologically advanced yet clean and accessible." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjiX4BtPF5PnR13vgU2gsC91BP7_4TFNVPgGQIUdNeAqLcdhmW-HEpQcF92jHZg61-_YR62Atfb_RDQPo5Roq2wc673q1YBEpK5uB4utK0Cra2JzbUpRbFOhGLGKMDZFKJhYMPdwHiH97y8svEjklm2czI7dsDu7QQBsBu5IJSjpSKa04QxJuz31u2rpTV7bT_XjY62GnR0dfeXeDfOekhizbPK2MFxXsKFx1rWf4C7YNTf7xGFHMO')"></div>
+</div>
+<h3 class="font-headline-lg text-[24px] mb-3 text-on-background">AI Intelligence</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                            A neural core that learns from every sensor and interaction to provide smarter insights every day.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<section class="relative py-32 overflow-hidden reveal">
+<div class="absolute inset-0 z-0">
+<img alt="Healthy water ecosystem vision" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYNDf1A3-v7ra8se2NVVw3OH4S-V-MFFFUEnWiRNpLb6zWkEtDJyfOT69kqYQ03swAdKVUTPVy1TlxJa3Lz8eI-1erLPiJPHJ-yzqtaxOEATmrv-LWaUOo0S7qVJpzTtXi0JkO-PAV3hM4xfsdq7rrqUdewNFTodvWPRVPsVGOn-6_1Qo5nsql2wJ5nUcrYSUFjaTVsHt4yByCuvFD_0f4apvX3Vspz9tUQSUZJdKb7Oi8Pd_ypdVI"/>
+<div class="absolute inset-0 bg-gradient-to-r from-on-background/60 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="max-w-2xl text-white">
+<h2 class="font-headline-xl text-[48px] mb-6">Restoring Balance to Our Ecosystems</h2>
+<p class="font-body-md text-body-md mb-10 text-surface-container-low opacity-90 leading-relaxed">
+                        Our vision is a world where nature and technology act as one. By monitoring every river, reservoir, and rainfall, we create a digital twin of our planet's hydration.
+                    </p>
+<button class="px-10 py-5 bg-white text-primary rounded-full font-bold hover:bg-primary-container hover:text-white transition-all transform active:scale-95 shadow-xl">
+                        Explore Our Network
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-on-background text-white py-16">
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-1 md:col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary-fixed-dim text-3xl">water_drop</span>
+<span class="font-headline-lg text-headline-lg font-semibold text-primary-fixed-dim">AquaSense AI</span>
+</div>
+<p class="font-body-md text-on-surface-variant max-w-sm mb-8">
+                        Pioneering the future of water management through artificial intelligence and sustainable design.
+                    </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">public</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">alternate_email</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">share</span>
+</a>
+</div>
+</div>
+<div>
+<h4 class="font-headline-lg text-[18px] mb-6">Platform</h4>
+<ul class="space-y-4 font-body-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Dashboard</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Reservoir Maps</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Predictive Alerts</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Case Studies</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline-lg text-[18px] mb-6">Company</h4>
+<ul class="space-y-4 font-body-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Our Vision</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-outline/20 text-center font-label-md text-label-md text-on-surface-variant">
+                © 2024 AquaSense AI. Built for the planet.
+            </div>
+</div>
+</footer>
+<script>
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body></html>

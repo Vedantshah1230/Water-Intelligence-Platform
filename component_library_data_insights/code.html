@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaSense AI - Component Library</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary-fixed": "#0c1e26",
+                "inverse-surface": "#213145",
+                "surface-container-high": "#dce9ff",
+                "surface-bright": "#f8f9ff",
+                "background": "#f8f9ff",
+                "on-secondary": "#ffffff",
+                "on-error": "#ffffff",
+                "error": "#ba1a1a",
+                "surface": "#f8f9ff",
+                "secondary-fixed": "#d3e5f1",
+                "primary-fixed": "#d3e3ff",
+                "surface-container": "#e5eeff",
+                "surface-dim": "#cbdbf5",
+                "secondary-container": "#d3e5f1",
+                "tertiary": "#2c6085",
+                "surface-variant": "#d3e4fe",
+                "surface-container-low": "#eff4ff",
+                "surface-container-highest": "#d3e4fe",
+                "tertiary-container": "#4779a0",
+                "inverse-on-surface": "#eaf1ff",
+                "on-secondary-fixed-variant": "#384953",
+                "on-primary-container": "#fdfcff",
+                "primary-fixed-dim": "#a3c9ff",
+                "primary-container": "#0076d1",
+                "tertiary-fixed-dim": "#9bccf6",
+                "primary": "#005da7",
+                "inverse-primary": "#a3c9ff",
+                "on-tertiary-container": "#fcfcff",
+                "on-tertiary": "#ffffff",
+                "on-error-container": "#93000a",
+                "outline-variant": "#c0c7d5",
+                "outline": "#707785",
+                "on-tertiary-fixed": "#001e30",
+                "on-primary-fixed": "#001c39",
+                "on-background": "#0b1c30",
+                "secondary-fixed-dim": "#b7c9d5",
+                "error-container": "#ffdad6",
+                "tertiary-fixed": "#cbe6ff",
+                "surface-tint": "#0060ab",
+                "secondary": "#50616b",
+                "on-secondary-container": "#566771",
+                "on-surface": "#0b1c30",
+                "on-tertiary-fixed-variant": "#0e4b6f",
+                "surface-container-lowest": "#ffffff",
+                "on-surface-variant": "#404753",
+                "on-primary-fixed-variant": "#004883",
+                "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "gutter": "24px",
+                "margin-mobile": "16px",
+                "margin-desktop": "64px",
+                "base": "8px",
+                "max-width": "1280px"
+            },
+            "fontFamily": {
+                "body-sm": ["Inter"],
+                "label-md": ["JetBrains Mono"],
+                "headline-xl": ["Plus Jakarta Sans"],
+                "headline-lg-mobile": ["Plus Jakarta Sans"],
+                "body-md": ["Inter"],
+                "headline-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .water-wave {
+        background: linear-gradient(180deg, #0091FF 0%, #005DA7 100%);
+        position: relative;
+        overflow: hidden;
+      }
+      .water-wave::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 38%;
+        animation: wave 10s infinite linear;
+      }
+      @keyframes wave {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    </style>
+</head>
+<body class="bg-surface-bright text-on-surface font-body-md selection:bg-primary/20">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-gutter py-4 bg-surface-bright/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-8">
+<span class="font-headline-lg text-headline-lg font-bold text-primary">AquaSense AI</span>
+<nav class="hidden md:flex gap-6">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="font-body-md text-body-md text-primary border-b-2 border-primary pb-1" href="#">Analytics</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Assets</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Forecasts</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-primary-fixed overflow-hidden border-2 border-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional user profile avatar for a corporate technician, featuring a friendly person in a bright, modern office with soft daylight illumination and Azure blue accent colors, reflecting a clean and trustworthy smart city tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVBYguR6Bml02pohjsViLaAW1RFx-w9d1N7dKDMONPkrSgWEN6VsMwI6keawkvGB5q_gGMda3IuI0w6phjWupTTMZRkiGpa1ZgG4uDL0zUNSfitls4oyX8L9RBWX0K1PQ8Ov_Qy_RKcVCYA-7Z4Qo09xELkbhLthJS0OMR9AUUR0JJPKCFUPx4sULI8ycMMVyg7MB_Id8Q-kn7swdxLGFd9WfFEnv7g1FBvjcJwaHpeQqy0Sqy-MPC"/>
+</div>
+</div>
+</header>
+<div class="flex min-h-screen pt-20">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col h-[calc(100vh-80px)] w-64 bg-surface-container-low p-4 gap-2 sticky top-20 shadow-md">
+<div class="px-4 py-2 mb-4">
+<p class="font-label-md text-label-md text-outline">RESOURCE MONITORING</p>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200 rounded-lg hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold" href="#">
+<span class="material-symbols-outlined">opacity</span>
+<span class="font-label-md text-label-md">Water Monitoring</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200 rounded-lg hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-label-md text-label-md">AI Insights</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200 rounded-lg hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined">terrain</span>
+<span class="font-label-md text-label-md">Field Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200 rounded-lg hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-label-md text-label-md">System Health</span>
+</a>
+<div class="mt-auto border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">help_center</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:translate-x-1 transition-transform duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-gutter max-w-max-width mx-auto">
+<div class="mb-10">
+<h1 class="font-headline-xl text-headline-xl text-primary mb-2">Component Library: Data &amp; Insights</h1>
+<p class="text-on-surface-variant max-w-2xl">Standardized visualization modules for AquaSense AI Enterprise systems. These components are designed for high-precision environmental monitoring.</p>
+</div>
+<!-- 1. KPI & Stat Cards -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">KPI &amp; Stat Overview</h2>
+<span class="bg-surface-container text-primary font-label-md px-3 py-1 rounded-full">Last updated: 5m ago</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<!-- Supply Stability -->
+<div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary-fixed rounded-lg">
+<span class="material-symbols-outlined text-primary">waves</span>
+</div>
+<span class="text-green-600 font-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span> +2.4%
+                            </span>
+</div>
+<h3 class="font-body-sm text-body-sm text-on-surface-variant">Supply Stability</h3>
+<p class="font-headline-lg text-headline-lg font-bold text-on-surface">98.2%</p>
+<div class="mt-4 h-8 w-full flex items-end gap-1">
+<div class="bg-primary/20 h-4 w-full rounded-sm"></div>
+<div class="bg-primary/20 h-6 w-full rounded-sm"></div>
+<div class="bg-primary/40 h-5 w-full rounded-sm"></div>
+<div class="bg-primary/60 h-8 w-full rounded-sm"></div>
+<div class="bg-primary h-7 w-full rounded-sm"></div>
+</div>
+</div>
+<!-- Network Health -->
+<div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary-fixed rounded-lg">
+<span class="material-symbols-outlined text-secondary">hub</span>
+</div>
+<span class="text-red-600 font-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_down</span> -0.8%
+                            </span>
+</div>
+<h3 class="font-body-sm text-body-sm text-on-surface-variant">Network Health</h3>
+<p class="font-headline-lg text-headline-lg font-bold text-on-surface">94.5%</p>
+<div class="mt-4 h-8 w-full flex items-end gap-1">
+<div class="bg-secondary/60 h-7 w-full rounded-sm"></div>
+<div class="bg-secondary/40 h-8 w-full rounded-sm"></div>
+<div class="bg-secondary/20 h-6 w-full rounded-sm"></div>
+<div class="bg-secondary/40 h-5 w-full rounded-sm"></div>
+<div class="bg-secondary/20 h-4 w-full rounded-sm"></div>
+</div>
+</div>
+<!-- Consumption -->
+<div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-tertiary-fixed rounded-lg">
+<span class="material-symbols-outlined text-tertiary">water_drop</span>
+</div>
+<span class="text-on-surface-variant font-label-md">Daily Avg.</span>
+</div>
+<h3 class="font-body-sm text-body-sm text-on-surface-variant">Consumption</h3>
+<p class="font-headline-lg text-headline-lg font-bold text-on-surface">4.2M <span class="text-body-sm font-normal">GAL</span></p>
+<div class="mt-4 h-8 w-full flex items-end gap-1">
+<div class="bg-tertiary/20 h-4 w-full rounded-sm"></div>
+<div class="bg-tertiary/20 h-5 w-full rounded-sm"></div>
+<div class="bg-tertiary/30 h-6 w-full rounded-sm"></div>
+<div class="bg-tertiary/40 h-8 w-full rounded-sm"></div>
+<div class="bg-tertiary/50 h-7 w-full rounded-sm"></div>
+</div>
+</div>
+<!-- Savings -->
+<div class="glass-card p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-green-100 rounded-lg">
+<span class="material-symbols-outlined text-green-700">payments</span>
+</div>
+<span class="text-green-600 font-label-md">Target Met</span>
+</div>
+<h3 class="font-body-sm text-body-sm text-on-surface-variant">Projected Savings</h3>
+<p class="font-headline-lg text-headline-lg font-bold text-on-surface">$12.4k</p>
+<div class="mt-4 h-8 w-full flex items-end gap-1">
+<div class="bg-green-500/20 h-3 w-full rounded-sm"></div>
+<div class="bg-green-500/40 h-5 w-full rounded-sm"></div>
+<div class="bg-green-500/60 h-7 w-full rounded-sm"></div>
+<div class="bg-green-500/80 h-6 w-full rounded-sm"></div>
+<div class="bg-green-500 h-8 w-full rounded-sm"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Specialized Resource Cards -->
+<section class="mb-12">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Resource Monitoring Modules</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Reservoir Card -->
+<div class="glass-card rounded-xl overflow-hidden shadow-sm flex flex-col md:flex-row">
+<div class="w-full md:w-48 water-wave h-48 md:h-full flex flex-col items-center justify-center p-6 text-white text-center relative">
+<div class="relative z-10">
+<p class="font-headline-xl text-headline-xl font-bold">72%</p>
+<p class="font-label-md text-label-md opacity-80 uppercase tracking-widest">Current Fill</p>
+</div>
+</div>
+<div class="flex-1 p-8">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Blue Lake Reservoir</h3>
+<p class="text-on-surface-variant font-body-sm">Station #882-Alpha</p>
+</div>
+<span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full border border-green-200">OPTIMAL</span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center pb-2 border-b border-outline-variant">
+<span class="text-on-surface-variant font-body-sm">Net Volume</span>
+<span class="font-bold">1.2B Gallons</span>
+</div>
+<div class="flex justify-between items-center pb-2 border-b border-outline-variant">
+<span class="text-on-surface-variant font-body-sm">Evaporation Rate</span>
+<span class="font-bold">0.02% / Day</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant font-body-sm">Last Rainfall</span>
+<span class="font-bold">2.4in (Apr 12)</span>
+</div>
+</div>
+<button class="mt-8 w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary-container transition-all active:scale-[0.98]">
+                                View Full Analytics
+                            </button>
+</div>
+</div>
+<!-- Groundwater Card -->
+<div class="glass-card rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white">layers</span>
+</div>
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-tertiary">Aquifer Basin Delta</h3>
+<p class="text-on-surface-variant font-body-sm">Sub-surface Monitoring</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div class="bg-surface-container-low p-4 rounded-xl text-center">
+<p class="text-on-surface-variant font-label-md mb-1 uppercase">Water Table Depth</p>
+<p class="text-2xl font-bold text-on-surface">-142.5 <span class="text-sm font-normal">FT</span></p>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl text-center">
+<p class="text-on-surface-variant font-label-md mb-1 uppercase">30-Day Forecast</p>
+<p class="text-2xl font-bold text-primary flex items-center justify-center gap-1">STABLE <span class="material-symbols-outlined">analytics</span></p>
+</div>
+</div>
+<div class="relative pt-1">
+<div class="flex mb-2 items-center justify-between">
+<div>
+<span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-tertiary bg-tertiary-fixed">
+                                        Basin Depletion Risk
+                                    </span>
+</div>
+<div class="text-right">
+<span class="text-xs font-semibold inline-block text-tertiary">
+                                        LOW (12%)
+                                    </span>
+</div>
+</div>
+<div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-surface-container-high">
+<div class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-tertiary" style="width:12%"></div>
+</div>
+<p class="text-body-sm text-on-surface-variant italic leading-relaxed">
+                                AI Note: Subsurface recharging has increased by 4.2% due to managed aquifer recharge initiatives. No extraction limits needed.
+                            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Alerts & Recommendations -->
+<section class="mb-12">
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Alerts Column -->
+<div class="xl:col-span-1 space-y-4">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile font-bold mb-4">System Alerts</h3>
+<!-- Red (High) -->
+<div class="bg-error-container/40 border border-error/20 p-4 rounded-xl flex gap-4">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">error</span>
+<div>
+<p class="font-bold text-on-error-container">Critical Pressure Drop</p>
+<p class="text-body-sm text-on-error-container opacity-90">Station #42-North reporting abnormal psi levels. Potential leak detected.</p>
+</div>
+</div>
+<!-- Amber (Warning) -->
+<div class="bg-yellow-50 border border-yellow-200 p-4 rounded-xl flex gap-4">
+<span class="material-symbols-outlined text-yellow-700" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div>
+<p class="font-bold text-yellow-900">Maintenance Due</p>
+<p class="text-body-sm text-yellow-800">Filtration Bank B scheduled for cycle cleanup in 12 hours.</p>
+</div>
+</div>
+<!-- Blue (Info) -->
+<div class="bg-primary-fixed border border-primary/10 p-4 rounded-xl flex gap-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">info</span>
+<div>
+<p class="font-bold text-on-primary-fixed-variant">System Update</p>
+<p class="text-body-sm text-on-primary-fixed-variant opacity-80">v2.4 AI Model now live. Anomaly detection accuracy improved by 14%.</p>
+</div>
+</div>
+<!-- Green (Success) -->
+<div class="bg-green-50 border border-green-200 p-4 rounded-xl flex gap-4">
+<span class="material-symbols-outlined text-green-700" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="font-bold text-green-900">Optimization Success</p>
+<p class="text-body-sm text-green-800">New night-flow schedule reduced energy costs by 8.5% last night.</p>
+</div>
+</div>
+</div>
+<!-- AI Recommendation Card -->
+<div class="xl:col-span-2 glass-card rounded-xl p-8 shadow-md relative overflow-hidden flex flex-col justify-between">
+<div class="absolute top-0 right-0 p-8">
+<span class="material-symbols-outlined text-primary/10 text-9xl select-none pointer-events-none">auto_awesome</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-6">
+<div class="bg-primary-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-white">auto_awesome</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile font-bold">Smart Flow Recommendation</h3>
+</div>
+<div class="max-w-2xl">
+<p class="font-headline-lg-mobile text-primary font-bold mb-4">"Shift active pumping to Zone 4 between 01:00 and 04:00 AM."</p>
+<p class="text-on-surface-variant text-body-md leading-relaxed mb-6">
+                                    Based on current grid energy pricing and forecasted demand in the residential sector, AquaSense AI predicts a potential 12% cost reduction by pre-filling local storage tanks during off-peak hours. Historical data suggests Zone 4 capacity is currently at 45%, providing optimal buffer for this maneuver.
+                                </p>
+</div>
+<div class="flex flex-wrap gap-4 items-center">
+<div class="flex items-center gap-2 px-4 py-2 bg-surface-container-high rounded-full text-on-surface-variant font-label-md">
+<span class="material-symbols-outlined text-sm">bolt</span>
+                                    Energy Saved: 1.2MWh
+                                </div>
+<div class="flex items-center gap-2 px-4 py-2 bg-surface-container-high rounded-full text-on-surface-variant font-label-md">
+<span class="material-symbols-outlined text-sm">savings</span>
+                                    Est. Value: $2,400
+                                </div>
+</div>
+</div>
+<div class="mt-12 flex gap-4">
+<button class="bg-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 hover:bg-primary-container shadow-lg shadow-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined">bolt</span>
+                                Implement Automatically
+                            </button>
+<button class="px-8 py-4 rounded-xl font-bold text-primary border border-primary/20 hover:bg-primary/5 transition-colors">
+                                Review Schedule
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Tables & Lists -->
+<section class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Recent Anomalies &amp; Leaks</h2>
+<div class="flex gap-2">
+<div class="relative">
+<input class="pl-10 pr-4 py-2 rounded-lg border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-0" placeholder="Search incidents..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2 text-outline text-xl">search</span>
+</div>
+<button class="px-4 py-2 border border-outline-variant rounded-lg flex items-center gap-2 font-label-md hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                        </button>
+</div>
+</div>
+<div class="glass-card rounded-xl overflow-hidden shadow-sm border border-outline-variant/30">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase">Incident ID</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase">Location</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase">Priority</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase">Status</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase">Loss Rate</th>
+<th class="px-6 py-4 font-label-md text-on-surface-variant uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4 font-label-md text-primary font-bold">LK-9021</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-lg">location_on</span>
+<span>Oak Street Main, Sector 4</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold border border-red-200">CRITICAL</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+<span class="text-on-surface">Under Investigation</span>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">420 gal/hr</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg"><span class="material-symbols-outlined text-primary">visibility</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg"><span class="material-symbols-outlined text-on-surface-variant">assignment_turned_in</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4 font-label-md text-primary font-bold">LK-8843</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-lg">location_on</span>
+<span>Industrial Loop, Station B</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold border border-yellow-200">MEDIUM</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+<span class="text-on-surface">Crew Dispatched</span>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">15 gal/hr</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg"><span class="material-symbols-outlined text-primary">visibility</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg"><span class="material-symbols-outlined text-on-surface-variant">assignment_turned_in</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-4 font-label-md text-primary font-bold">LK-8712</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-lg">location_on</span>
+<span>Pine Ridge Heights, Res Area</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold border border-blue-200">LOW</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-600"></span>
+<span class="text-on-surface">Resolved</span>
+</div>
+</td>
+<td class="px-6 py-4 text-on-surface-variant">0 gal/hr</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-highest rounded-lg"><span class="material-symbols-outlined text-primary">visibility</span></button>
+<button class="p-2 hover:bg-surface-container-highest rounded-lg"><span class="material-symbols-outlined text-on-surface-variant">assignment_turned_in</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
+<p class="text-body-sm text-on-surface-variant">Showing 3 of 12 active incidents</p>
+<div class="flex gap-2">
+<button class="p-2 rounded hover:bg-surface-container-highest disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 rounded hover:bg-surface-container-highest">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full py-12 px-gutter flex flex-col md:flex-row justify-between items-center gap-8 bg-surface-container-highest mt-20">
+<div>
+<span class="font-headline-lg text-headline-lg font-bold text-primary">AquaSense AI</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">Precision Water Management Platform</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">Security</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors underline" href="#">API Documentation</a>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-80">© 2024 AquaSense AI. All rights reserved.</p>
+</footer>
+<script>
+        // Micro-interaction for water wave level
+        window.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-4px)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body></html>

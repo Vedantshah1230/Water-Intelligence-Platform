@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaSense AI - Dashboard</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Design System Theme Integration -->
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"secondary-container": "#d3e5f1", "on-primary-fixed": "#001c39", "secondary-fixed-dim": "#b7c9d5", "surface-tint": "#0060ab", "on-secondary-fixed": "#0c1e26", "surface-bright": "#f8f9ff", "on-surface-variant": "#404753", "surface-container-low": "#eff4ff", "on-primary-container": "#fdfcff", primary: "#005da7", "on-secondary-fixed-variant": "#384953", error: "#ba1a1a", "primary-fixed": "#d3e3ff", "tertiary-container": "#4779a0", "tertiary-fixed-dim": "#9bccf6", "surface-variant": "#d3e4fe", "on-secondary": "#ffffff", "outline-variant": "#c0c7d5", "surface-container-high": "#dce9ff", "surface-container": "#e5eeff", "on-tertiary": "#ffffff", "surface-dim": "#cbdbf5", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#0e4b6f", "on-error-container": "#93000a", "inverse-surface": "#213145", "on-surface": "#0b1c30", "on-tertiary-container": "#fcfcff", secondary: "#50616b", "on-primary-fixed-variant": "#004883", "surface-container-highest": "#d3e4fe", "on-primary": "#ffffff", "inverse-primary": "#a3c9ff", "primary-fixed-dim": "#a3c9ff", tertiary: "#2c6085", "on-error": "#ffffff", "on-background": "#0b1c30", "on-secondary-container": "#566771", "secondary-fixed": "#d3e5f1", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#eaf1ff", background: "#f8f9ff", "on-tertiary-fixed": "#001e30", surface: "#f8f9ff", "primary-container": "#0076d1", outline: "#707785", "tertiary-fixed": "#cbe6ff"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {base: "8px", gutter: "24px", "margin-desktop": "64px", "max-width": "1280px", "margin-mobile": "16px"}, fontFamily: {"headline-lg-mobile": ["Plus Jakarta Sans"], "label-md": ["JetBrains Mono"], "body-md": ["Inter"], "headline-xl": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "headline-lg": ["Plus Jakarta Sans"], headline: ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], body: ["Inter"], label: ["Jetbrains Mono"]}, fontSize: {"headline-lg-mobile": ["24px", {lineHeight: "32px", fontWeight: "600"}], "label-md": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600"}]}}}};</script>
+<style>
+        body {
+            background-color: #f8f9ff;
+            color: #0b1c30;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .status-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-32">
+<!-- TopAppBar Execution -->
+<header class="bg-surface dark:bg-on-background sticky top-0 z-50 docked full-width">
+<div class="flex justify-between items-center w-full px-margin-mobile py-base max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-container">
+<img alt="Sam" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQob8owJTiL8Qkp2MchGWeKOrLhg37J5Fv9HeIvOdlwAVZWoGWEJUMnlteDgBkyesUFEXJyr8VMdSJjKlAzvSNlWmnetiAaD1zlYEDJvzdsngcP39wL1Mzqt_6XvGrZjaTV1_AeT2wkE9uz-zgItnGaKuUoSNw7N2CMQEQyprqOOdZ8rJ5zxE5nWug1TuwLV-w3n1pNZrCeafCpZOi5wYpgpofNv5KiWvqHj-SXncRPCnKVbZO1TIF"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-semibold text-primary">AquaSense AI</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full active:scale-95">
+                settings
+            </button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile pt-base">
+<!-- Welcome Header -->
+<section class="mb-gutter">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-3xl">👋</span>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Welcome back, Sam.</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Water conditions are healthy today.</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Main Water Status Card -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl p-gutter shadow-sm border border-outline-variant flex flex-col justify-between min-h-[300px] relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-gutter">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Current Overall Status</p>
+<h3 class="font-headline-lg text-headline-lg text-primary">Water Status</h3>
+</div>
+<span class="bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-label-md flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary status-pulse"></span>
+                            Healthy
+                        </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">Your local water supply is safe and stable. Current data indicates no interruptions for the foreseeable future.</p>
+</div>
+<div class="mt-gutter flex items-end justify-between relative z-10">
+<div class="flex gap-4">
+<div class="flex flex-col">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary">98%</span>
+<span class="font-label-md text-label-md text-outline">Reservoir</span>
+</div>
+<div class="w-px h-10 bg-outline-variant"></div>
+<div class="flex flex-col">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary">0.02</span>
+<span class="font-label-md text-label-md text-outline">Turbidity</span>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-gutter py-base rounded-lg font-label-md hover:opacity-90 active:scale-95 transition-all">
+                        Full Systems View
+                    </button>
+</div>
+<!-- Abstract Decorative SVG Element -->
+<div class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none">
+<svg height="300" viewbox="0 0 200 200" width="300" xmlns="http://www.w3.org/2000/svg">
+<path d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,77.3,-44.7C85.4,-31.3,90.5,-15.6,89.4,-0.6C88.3,14.4,81,28.8,72.4,42.4C63.8,56,53.8,68.8,40.4,76.5C27,84.2,10.2,86.8,-6,87.8C-22.2,88.8,-37.8,88.2,-51.2,80.5C-64.6,72.8,-75.8,58.1,-82.1,42.4C-88.4,26.7,-89.8,10,-88.4,-6.2C-87,-22.4,-82.8,-38.1,-74.1,-51.3C-65.4,-64.5,-52.2,-75.2,-37.8,-82C-23.4,-88.8,-7.8,-91.7,3.5,-92.3C14.8,-92.9,29.6,-91.2,44.7,-76.4Z" fill="#005da7" transform="translate(100 100)"></path>
+</svg>
+</div>
+</div>
+<!-- Daily Tip Card -->
+<div class="md:col-span-4 bg-tertiary-fixed text-on-tertiary-fixed rounded-xl p-gutter border border-outline-variant flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center mb-gutter shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile mb-base">Daily Tip</h4>
+<p class="font-body-md text-body-md opacity-90">Consider watering crops before 9 AM to save 20% more water.</p>
+</div>
+<button class="mt-gutter font-label-md text-on-tertiary-fixed-variant flex items-center gap-2 group font-semibold">
+                    Learn more 
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<!-- Metric Card 1: Groundwater -->
+<div class="md:col-span-6 bg-surface-container-lowest rounded-xl p-gutter shadow-sm border border-outline-variant">
+<div class="flex items-center gap-4 mb-gutter">
+<div class="w-12 h-12 rounded-full bg-secondary-container/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-outline uppercase">Groundwater Level</p>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Good</h4>
+</div>
+<div class="ml-auto">
+<span class="font-label-md text-label-md text-secondary bg-secondary-container/40 px-2 py-1 rounded">STABLE</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-gutter">Groundwater is healthy and expected to remain stable for the next 30 days.</p>
+<button class="w-full py-base border-2 border-outline-variant rounded-lg font-label-md text-primary hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                    View details
+                </button>
+</div>
+<!-- Metric Card 2: Water Quality -->
+<div class="md:col-span-6 bg-surface-container-lowest rounded-xl p-gutter shadow-sm border border-outline-variant">
+<div class="flex items-center gap-4 mb-gutter">
+<div class="w-12 h-12 rounded-full bg-primary-fixed/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">health_and_safety</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-outline uppercase">Water Quality</p>
+<h4 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Excellent</h4>
+</div>
+<div class="ml-auto">
+<span class="font-label-md text-label-md text-primary bg-primary-fixed/40 px-2 py-1 rounded">SAFE</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-gutter">Quality is within optimal range for drinking and irrigation.</p>
+<button class="w-full py-base border-2 border-outline-variant rounded-lg font-label-md text-primary hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+                    Download report
+                </button>
+</div>
+</div>
+<!-- Call to Action Section -->
+<section class="mt-gutter pb-gutter">
+<button class="w-full bg-error text-on-error py-gutter rounded-xl font-headline-lg-mobile flex items-center justify-center gap-3 hover:brightness-110 active:scale-[0.99] transition-all shadow-lg shadow-error/10">
+<span class="material-symbols-outlined">report_problem</span>
+                Report an Issue
+            </button>
+</section>
+</main>
+<!-- BottomNavBar Execution -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface-container rounded-t-xl shadow-[0_-4px_12px_0_rgba(0,93,167,0.08)]">
+<!-- Dashboard (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<!-- Alerts -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-label-md text-label-md">Alerts</span>
+</a>
+<!-- Insights -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<!-- Community -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-md text-label-md">Community</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for cards on hover
+        document.querySelectorAll('.shadow-sm').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('shadow-md', '-translate-y-1');
+                card.style.transition = 'all 0.3s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('shadow-md', '-translate-y-1');
+            });
+        });
+    </script>
+</body></html>

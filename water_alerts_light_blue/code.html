@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AquaSense AI - Alerts</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"secondary-container": "#d3e5f1", "on-primary-fixed": "#001c39", "secondary-fixed-dim": "#b7c9d5", "surface-tint": "#0060ab", "on-secondary-fixed": "#0c1e26", "surface-bright": "#f8f9ff", "on-surface-variant": "#404753", "surface-container-low": "#eff4ff", "on-primary-container": "#fdfcff", primary: "#005da7", "on-secondary-fixed-variant": "#384953", error: "#ba1a1a", "primary-fixed": "#d3e3ff", "tertiary-container": "#4779a0", "tertiary-fixed-dim": "#9bccf6", "surface-variant": "#d3e4fe", "on-secondary": "#ffffff", "outline-variant": "#c0c7d5", "surface-container-high": "#dce9ff", "surface-container": "#e5eeff", "on-tertiary": "#ffffff", "surface-dim": "#cbdbf5", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#0e4b6f", "on-error-container": "#93000a", "inverse-surface": "#213145", "on-surface": "#0b1c30", "on-tertiary-container": "#fcfcff", secondary: "#50616b", "on-primary-fixed-variant": "#004883", "surface-container-highest": "#d3e4fe", "on-primary": "#ffffff", "inverse-primary": "#a3c9ff", "primary-fixed-dim": "#a3c9ff", tertiary: "#2c6085", "on-error": "#ffffff", "on-background": "#0b1c30", "on-secondary-container": "#566771", "secondary-fixed": "#d3e5f1", "surface-container-lowest": "#ffffff", "inverse-on-surface": "#eaf1ff", background: "#f8f9ff", "on-tertiary-fixed": "#001e30", surface: "#f8f9ff", "primary-container": "#0076d1", outline: "#707785", "tertiary-fixed": "#cbe6ff"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {base: "8px", gutter: "24px", "margin-desktop": "64px", "max-width": "1280px", "margin-mobile": "16px"}, fontFamily: {"headline-lg-mobile": ["Plus Jakarta Sans"], "label-md": ["JetBrains Mono"], "body-md": ["Inter"], "headline-xl": ["Plus Jakarta Sans"], "body-sm": ["Inter"], "headline-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-sm": ["JetBrains Mono"], headline: ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], body: ["Inter"], label: ["Jetbrains Mono"]}, fontSize: {"headline-lg-mobile": ["24px", {lineHeight: "32px", fontWeight: "600"}], "label-md": ["12px", {lineHeight: "16px", fontWeight: "500"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-xl": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600"}], "headline-md": ["24px", {lineHeight: "32px", fontWeight: "600"}], "headline-sm": ["20px", {lineHeight: "28px", fontWeight: "600"}], "label-sm": ["10px", {lineHeight: "14px", fontWeight: "500"}]}}}};</script>
+<style>
+        body {
+            background-color: #f8f9ff;
+            color: #0b1c30;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-layer-1 {
+            background-color: #ffffff;
+            border: 1px solid #d3e4fe;
+        }
+        .tonal-layer-2 {
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px 0 rgba(0, 96, 171, 0.08);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c0c7d5; border-radius: 10px; }
+    </style>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-surface/80 backdrop-blur-md w-full border-b border-outline-variant">
+<div class="flex justify-between items-center w-full px-margin-mobile py-base max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A high-quality professional portrait of a modern user in a tech environment, softly lit with cool blue tones, expressing trust and intelligence. The aesthetic is clean and corporate modern, matching a premium utility application design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwgdld_AAVL0zJgPC4DRlJ9m7CuC-JOW6ik8Kpxh7jJvxGsLVy0Q0wqobInrPxVZ1xUsV5mn8IYRuT1HxZBy4LhCvKlqLDMjkDkJJxtsJTNl3CyGZZRAYPnsf3iJb_tnM7Nsv-OGrwCNQrPhtkH5FwynRgyDDMl8jtl_q-Yxx7PbUdoaKvB5D8TTv8K-koqcDMgUQt8VmV19RoVNoyFPTGPYLtHwyu1vw7-pY2dX-NZe4tCRWQi23r"/>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">AquaSense AI</h1>
+</div>
+<button class="material-symbols-outlined p-2 rounded-xl text-primary hover:bg-surface-container-low transition-all active:scale-95 border border-transparent hover:border-outline-variant">
+            settings
+        </button>
+</div>
+</header>
+<main class="max-w-3xl mx-auto px-margin-mobile pt-8 space-y-gutter">
+<!-- Page Title & Filter -->
+<div class="flex justify-between items-end pb-base">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Alerts</h2>
+<p class="font-body-md text-on-surface-variant">Stay updated on your water network.</p>
+</div>
+<span class="font-label-md text-label-md bg-primary-container text-on-primary-container px-3 py-1 rounded-full shadow-sm">3 New</span>
+</div>
+<!-- Alert Cards Container -->
+<div class="grid gap-base">
+<!-- Alert 1: High Priority -->
+<article class="tonal-layer-2 rounded-xl p-gutter border-l-4 border-error overflow-hidden transition-all hover:translate-y-[-2px] hover:shadow-md cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex-1 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Water Maintenance Tomorrow</h3>
+<span class="font-label-sm text-label-sm text-error font-bold uppercase tracking-widest">High Priority</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant font-medium">Oct 12, 8:00 AM</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Supply will be paused for 2 hours for pipe upgrades in your area.</p>
+<div class="pt-4">
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-md transition-all hover:bg-primary-container hover:shadow-lg active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">alarm_add</span>
+                            Set Reminder
+                        </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Alert 2: Insight -->
+<article class="tonal-layer-2 rounded-xl p-gutter border-l-4 border-tertiary overflow-hidden transition-all hover:translate-y-[-2px] hover:shadow-md cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div class="flex-1 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Seasonal Drought Warning</h3>
+<span class="font-label-sm text-label-sm text-tertiary font-bold uppercase tracking-widest">Insight</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Water levels are lower than usual for this month. We recommend conservation.</p>
+<div class="pt-4">
+<button class="border-2 border-tertiary text-tertiary px-6 py-2 rounded-lg font-label-md hover:bg-tertiary-container hover:text-on-tertiary-container transition-all active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">eco</span>
+                            Tips for Saving
+                        </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Alert 3: Success -->
+<article class="tonal-layer-2 rounded-xl p-gutter border-l-4 border-primary overflow-hidden transition-all hover:translate-y-[-2px] hover:shadow-md cursor-pointer">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex-1 space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Quality Check Passed</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase tracking-widest">Success</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Routine tests confirm water purity is at 99.8%.</p>
+<div class="pt-4 flex items-center gap-2 text-primary font-label-md font-bold">
+<span class="material-symbols-outlined">check_circle</span>
+                        System Operating Normally
+                    </div>
+</div>
+</div>
+</article>
+</div>
+<!-- Empty State Preview (Hidden) -->
+<section class="hidden flex flex-col items-center justify-center py-12 space-y-4 text-center" id="empty-state">
+<div class="w-64 h-64 rounded-full bg-surface-container-low flex items-center justify-center overflow-hidden">
+<img class="w-48 h-48 opacity-60" data-alt="A soft, minimalist illustration of a calm water surface with gentle ripples. The lighting is bright and airy, using a soft primary blue and grey palette. The mood is tranquil and reassuring, signifying a lack of urgent alerts or issues in the system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6jeLhzIW5rm3-FR9-XBtAVY9qr83vD2SejRNW0cCiunmwys2HDd0D_9zN-2pjR3rJvNMrOGD7IJakjwE8Ld6ncvTtO9ciTVTig0wc2FHnjzowTx2UkQE7Sn6oNbHsfRMQ6pw_H3ukOscatSiasH2Svy6kkhKvMLT6C0J0LWPePs8KOTjrZDzNlv134iX7j2FCHSkkOXr0FkGyjBeAHkiH90MHgbmu14aJh5hKIv2gjiEUBKCXR_7L"/>
+</div>
+<div class="space-y-1">
+<h3 class="font-headline-md text-headline-md text-on-surface">No critical alerts</h3>
+<p class="font-body-md text-on-surface-variant max-w-xs mx-auto">Your water network is running smoothly. We'll let you know if anything changes.</p>
+</div>
+</section>
+<!-- Notification History Toggle -->
+<div class="pt-8 flex justify-center">
+<button class="font-label-md text-primary flex items-center gap-2 hover:underline hover:text-surface-tint transition-colors">
+            View Past Notifications
+            <span class="material-symbols-outlined">history</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface-container/95 backdrop-blur-md border-t border-outline-variant shadow-[0_-4px_16px_rgba(0,0,0,0.05)]">
+<!-- Dashboard -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm mt-0.5">Dashboard</span>
+</a>
+<!-- Alerts (ACTIVE) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-5 py-2 active:scale-90 transition-all duration-200 shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-label-sm text-label-sm mt-0.5 font-bold">Alerts</span>
+</a>
+<!-- Insights -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-sm text-label-sm mt-0.5">Insights</span>
+</a>
+<!-- Community -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-sm text-label-sm mt-0.5">Community</span>
+</a>
+</nav>
+<script>
+    // Simple micro-interaction for cards
+    document.querySelectorAll('article').forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.add('ring-2', 'ring-primary-fixed', 'shadow-lg');
+            setTimeout(() => {
+                card.classList.remove('ring-2', 'ring-primary-fixed', 'shadow-lg');
+            }, 600);
+        });
+    });
+</script>
+</body></html>
