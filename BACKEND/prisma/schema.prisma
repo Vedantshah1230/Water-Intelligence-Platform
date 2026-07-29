@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  role      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model WaterConsumption {
+  id          String   @id @default(uuid())
+  area        String
+  date        DateTime
+  liters_used Float
+  createdAt   DateTime @default(now())
+}
+
+model Reservoir {
+  id            String   @id @default(uuid())
+  name          String
+  capacity      Float
+  current_level Float
+  today_inflow  Float?   @default(0)
+  today_outflow Float?   @default(0)
+  createdAt     DateTime @default(now())
+}
+
+model SensorData {
+  id         String   @id @default(uuid())
+  sensor_id  String
+  flow_rate  Float
+  pressure   Float
+  quality    Float
+  timestamp  DateTime @default(now())
+}
+
+model Alert {
+  id        String   @id @default(uuid())
+  type      String
+  severity  String
+  location  String
+  status    String
+  timestamp DateTime @default(now())
+}
+
+model Prediction {
+  id        String   @id @default(uuid())
+  target    String
+  score     Float
+  date      DateTime @default(now())
+}
