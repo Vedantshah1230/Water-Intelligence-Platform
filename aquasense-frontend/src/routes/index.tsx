@@ -12,6 +12,8 @@ import { LandingPage } from '@/pages/LandingPage';
 import { AuthLayout } from '@/layouts/AuthLayout';
 import { Login } from '@/pages/auth/Login';
 import { Register } from '@/pages/auth/Register';
+import { AdminLayout } from '@/layouts/AdminLayout';
+import { AdminDashboard } from '@/pages/admin/AdminDashboard';
 
 export function AppRoutes() {
   return (
@@ -31,6 +33,14 @@ export function AppRoutes() {
         <Route path="settings" element={<Settings />} />
         <Route path="reports" element={<Reports />} />
         <Route path="predictions" element={<div className="p-4">AI Predictions Page (Coming Soon)</div>} />
+      </Route>
+
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="users" element={<div className="p-4">User Management (Coming Soon)</div>} />
+        <Route path="roles" element={<div className="p-4">Role Management (Coming Soon)</div>} />
+        <Route path="system" element={<div className="p-4">System Monitoring (Coming Soon)</div>} />
+        <Route path="settings" element={<div className="p-4">Admin Settings (Coming Soon)</div>} />
       </Route>
     </Routes>
   );

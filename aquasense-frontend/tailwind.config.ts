@@ -93,8 +93,17 @@ export default {
         md: "0.75rem",
         lg: "1rem",
         xl: "1.5rem",
+        "2xl": "2rem",
         full: "9999px",
       },
+      boxShadow: {
+        'premium': '0 10px 40px -10px rgba(0, 52, 97, 0.08), 0 1px 3px rgba(0, 52, 97, 0.05)',
+        'premium-hover': '0 20px 40px -10px rgba(0, 52, 97, 0.12), 0 1px 3px rgba(0, 52, 97, 0.05)',
+        'glass': '0 8px 32px 0 rgba(0, 52, 97, 0.07)',
+      },
+      backgroundImage: {
+        'water-mesh': 'radial-gradient(at 0% 0%, hsla(205,100%,92%,1) 0px, transparent 50%), radial-gradient(at 100% 0%, hsla(180,100%,94%,1) 0px, transparent 50%), radial-gradient(at 100% 100%, hsla(213,100%,92%,1) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(190,100%,94%,1) 0px, transparent 50%)',
+      }
     },
   },
   plugins: [],
