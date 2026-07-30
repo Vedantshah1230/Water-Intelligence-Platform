@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import api from '@/lib/api';
+import { toast } from 'sonner';
 
 // Fix Leaflet's default icon issue
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -58,8 +59,8 @@ export function MapInterface() {
       <div className="flex justify-between items-center mb-gutter">
         <h2 className="font-headline-lg text-primary">Live Incident Map</h2>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">Filters</Button>
-          <Button variant="default" size="sm">Export</Button>
+          <Button variant="outline" size="sm" onClick={() => toast('Filters panel opened')}>Filters</Button>
+          <Button variant="default" size="sm" onClick={() => toast.success('Exporting map data...')}>Export</Button>
         </div>
       </div>
       
@@ -79,7 +80,7 @@ export function MapInterface() {
                     <span className={cn("px-2 py-0.5 rounded text-xs font-bold text-white", report.status === 'Pending' ? 'bg-error' : report.status === 'Investigating' ? 'bg-[#cc7700]' : 'bg-primary')}>
                       {report.status}
                     </span>
-                    <Button variant="outline" size="sm" className="h-6 px-2 text-xs">Details</Button>
+                    <Button variant="outline" size="sm" className="h-6 px-2 text-xs" onClick={() => toast(`Loading details for: ${report.title}`)}>Details</Button>
                   </div>
                 </div>
               </Popup>

@@ -1,9 +1,12 @@
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Users, Shield, Settings, Server, LogOut, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 export function AdminLayout() {
+  const navigate = useNavigate();
+
   const navItems = [
     { name: 'Overview', path: '/admin', icon: LayoutDashboard },
     { name: 'User Management', path: '/admin/users', icon: Users },
@@ -11,6 +14,11 @@ export function AdminLayout() {
     { name: 'System Monitoring', path: '/admin/system', icon: Server },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];
+
+  const handleLogout = () => {
+    toast('Logging out...');
+    navigate('/auth/login');
+  };
 
   return (
     <div className="flex h-screen bg-transparent overflow-hidden">
@@ -43,7 +51,7 @@ export function AdminLayout() {
         </nav>
 
         <div className="p-4 border-t border-white/20 bg-white/30">
-          <Button variant="outline" className="w-full justify-start text-error hover:text-error hover:bg-error-container/50 border-error/20">
+          <Button onClick={handleLogout} variant="outline" className="w-full justify-start text-error hover:text-error hover:bg-error-container/50 border-error/20">
             <LogOut className="w-4 h-4 mr-2" />
             Sign Out
           </Button>
@@ -55,7 +63,7 @@ export function AdminLayout() {
         <header className="h-16 rounded-2xl bg-white/40 backdrop-blur-xl border border-white/20 shadow-glass flex items-center justify-between px-6 mb-4">
           <h2 className="font-headline-sm text-on-surface font-semibold">Enterprise Control Center</h2>
           <div className="flex items-center gap-4">
-            <button className="relative p-2 rounded-full hover:bg-white/50 text-on-surface-variant transition-colors">
+            <button onClick={() => toast('No new system alerts')} className="relative p-2 rounded-full hover:bg-white/50 text-on-surface-variant transition-colors">
               <Bell className="w-5 h-5" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full animate-pulse"></span>
             </button>

@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, BellRing, Map, Users, Settings, FileText, Activity } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 export function Sidebar() {
   const navItems = [
@@ -11,6 +12,7 @@ export function Sidebar() {
     { to: "/dashboard/reports", icon: FileText, label: "Reports" },
     { to: "/dashboard/predictions", icon: Activity, label: "AI Predictions" },
     { to: "/dashboard/community", icon: Users, label: "Community" },
+    { to: "/dashboard/about", icon: FileText, label: "About" },
     { to: "/dashboard/settings", icon: Settings, label: "Settings" },
   ];
 
@@ -41,7 +43,7 @@ export function Sidebar() {
         <div className="bg-surface-container-low rounded-xl p-4">
           <p className="font-label-md text-primary mb-1">Need help?</p>
           <p className="font-body-sm text-on-surface-variant mb-3">Ask the AquaSense AI Assistant for guidance.</p>
-          <button className="w-full bg-primary-container text-on-primary-container py-2 rounded-lg font-label-md hover:brightness-95 transition-all text-sm">
+          <button onClick={() => toast('AI Assistant Chat feature coming soon!')} className="w-full bg-primary-container text-on-primary-container py-2 rounded-lg font-label-md hover:brightness-95 transition-all text-sm">
             Open Chat
           </button>
         </div>

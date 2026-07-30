@@ -4,9 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-surface text-on-surface antialiased;
-    background-image: theme('backgroundImage.water-mesh');
-    background-attachment: fixed;
+    @apply bg-surface text-on-surface antialiased bg-water-mesh bg-fixed;
     min-height: max(884px, 100dvh);
   }
 }

@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Droplets, Shield, Activity, BarChart3, ArrowRight } from 'lucide-react';
 
 export function LandingPage() {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen bg-surface flex flex-col">
+    <div className="min-h-screen bg-transparent flex flex-col">
       <header className="px-6 py-4 flex items-center justify-between border-b border-outline-variant bg-surface/80 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-2 text-primary">
           <Droplets className="w-6 h-6" />
@@ -13,9 +15,7 @@ export function LandingPage() {
         </div>
         <div className="flex items-center gap-4">
           <Link to="/auth/login" className="font-label-md hover:text-primary transition-colors">Sign In</Link>
-          <Link to="/auth/register">
-            <Button size="sm">Get Started</Button>
-          </Link>
+          <Button size="sm" onClick={() => navigate('/auth/register')}>Get Started</Button>
         </div>
       </header>
 
@@ -29,17 +29,13 @@ export function LandingPage() {
             Leverage AI and real-time data to monitor, predict, and manage water resources efficiently. Empowering communities and industries to build a sustainable water ecosystem.
           </p>
           <div className="flex items-center justify-center gap-4">
-            <Link to="/auth/register">
-              <Button size="lg" className="flex items-center gap-2 group text-lg h-14 px-8 rounded-full">
-                Start for free
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link to="/dashboard">
-              <Button size="lg" variant="outline" className="text-lg h-14 px-8 rounded-full">
-                View Live Demo
-              </Button>
-            </Link>
+            <Button size="lg" onClick={() => navigate('/auth/register')} className="flex items-center gap-2 group text-lg h-14 px-8 rounded-full">
+              Start for free
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button size="lg" variant="outline" onClick={() => navigate('/dashboard')} className="text-lg h-14 px-8 rounded-full">
+              View Live Demo
+            </Button>
           </div>
         </section>
 

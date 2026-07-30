@@ -7,6 +7,9 @@ import { Dashboard } from '@/pages/Dashboard';
 import { Alerts } from '@/pages/Alerts';
 
 import { Settings } from '@/pages/Settings';
+import { AIPredictions } from '@/pages/AIPredictions';
+import { Community } from '@/pages/Community';
+import { About } from '@/pages/About';
 
 import { LandingPage } from '@/pages/LandingPage';
 import { AuthLayout } from '@/layouts/AuthLayout';
@@ -29,10 +32,11 @@ export function AppRoutes() {
         <Route index element={<Dashboard />} />
         <Route path="alerts" element={<Alerts />} />
         <Route path="map" element={<MapInterface />} />
-        <Route path="community" element={<div className="p-4">Community Page (Coming Soon)</div>} />
+        <Route path="community" element={<Community />} />
         <Route path="settings" element={<Settings />} />
         <Route path="reports" element={<Reports />} />
-        <Route path="predictions" element={<div className="p-4">AI Predictions Page (Coming Soon)</div>} />
+        <Route path="predictions" element={<AIPredictions />} />
+        <Route path="about" element={<About />} />
       </Route>
 
       <Route path="/admin" element={<AdminLayout />}>

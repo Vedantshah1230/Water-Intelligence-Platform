@@ -23,7 +23,7 @@ export function Register() {
 
   const onSubmit = (data: RegisterFormValues) => {
     console.log(data);
-    navigate('/');
+    navigate('/dashboard');
   };
 
   return (
