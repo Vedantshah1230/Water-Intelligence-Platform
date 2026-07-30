@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import { PrismaClient } from '@prisma/client';
 
 dotenv.config();
 
@@ -21,14 +22,15 @@ import consumptionRoutes from './routes/consumption';
 import advancedRoutes from './routes/advanced';
 import groundwaterRoutes from './routes/groundwater';
 import alertsRoutes from './routes/alerts';
-import { PrismaClient } from '@prisma/client';
-import { getWeatherData } from './services/weather';
-import cron from 'node-cron';
-import axios from 'axios';
+import adminRoutes from './routes/admin';
+import reportsRoutes from './routes/reports';
+import mapRoutes from './routes/map';
+import externalRoutes from './routes/external';
+import aiAssistantRoutes from './routes/aiAssistant';
 
 const prisma = new PrismaClient();
 
-// Routes
+// Mount API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/sensors', sensorRoutes);
 app.use('/api/dashboard', dashboardRoutes);
@@ -37,54 +39,28 @@ app.use('/api/consumption', consumptionRoutes);
 app.use('/api/advanced', advancedRoutes);
 app.use('/api/groundwater', groundwaterRoutes);
 app.use('/api/alerts', alertsRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/map', mapRoutes);
+app.use('/api/external', externalRoutes);
+app.use('/api/ai-assistant', aiAssistantRoutes);
 
-app.get('/api/health', (req: Request, res: Response) => {
-  res.json({ status: 'ok', message: 'AquaSense AI Backend is running' });
-});
-
-// Automated Agent: Runs every hour (using * * * * * for testing purposes so it runs every minute in dev)
-cron.schedule('* * * * *', async () => {
-  console.log('[Automated Agent] Waking up to check water shortage risks...');
-  
+// Health Check API
+app.get('/api/health', async (req: Request, res: Response) => {
   try {
-    // 1. Fetch live weather data for the city
-    const weather = await getWeatherData('Mumbai');
-    
-    // 2. Fetch current reservoir levels from DB
-    const reservoirs = await prisma.reservoir.findMany();
-    let avgLevel = 50; // default fallback
-    if (reservoirs.length > 0) {
-      avgLevel = reservoirs.reduce((sum: number, r: any) => sum + r.current_level, 0) / reservoirs.length;
-    }
-    
-    // 3. Send data to AI Model for shortage prediction
-    const mlResponse = await axios.post(`${process.env.ML_SERVICE_URL || 'http://127.0.0.1:8000'}/predict/shortage`, {
-      area: 'Mumbai',
-      reservoir_level: avgLevel,
-      rainfall_forecast: weather.rainfall_mm,
-      population_demand: 1200
+    const userCount = await prisma.user.count();
+    res.json({
+      status: 'ok',
+      service: 'AquaSense AI Enterprise Backend',
+      database: 'Connected (SQLite)',
+      registeredUsers: userCount,
+      timestamp: new Date().toISOString()
     });
-    
-    const risk = mlResponse.data;
-    console.log(`[Automated Agent] Shortage Risk: ${risk.risk_level} (${risk.shortage_probability}%)`);
-    
-    // 4. Generate Alert if High/Critical
-    if (risk.risk_level === 'High' || risk.risk_level === 'Critical') {
-      await prisma.alert.create({
-        data: {
-          type: "Shortage",
-          severity: risk.risk_level,
-          location: risk.area,
-          status: "Active"
-        }
-      });
-      console.log('[Automated Agent] Alert saved to database.');
-    }
   } catch (error: any) {
-    console.error(`[Automated Agent] Failed to run checks: ${error.message}`);
+    res.status(500).json({ status: 'degraded', error: error.message });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`[AquaSense Enterprise Backend] Running on http://localhost:${PORT}`);
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, BellRing, Map, Users, Settings, FileText, Activity } from 'lucide-react';
+import { LayoutDashboard, BellRing, Map, Users, Settings, FileText, Activity, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -14,6 +14,7 @@ export function Sidebar() {
     { to: "/dashboard/community", icon: Users, label: "Community" },
     { to: "/dashboard/about", icon: FileText, label: "About" },
     { to: "/dashboard/settings", icon: Settings, label: "Settings" },
+    { to: "/admin", icon: Shield, label: "Admin Panel" },
   ];
 
   return (

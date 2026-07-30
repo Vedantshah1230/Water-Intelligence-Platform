@@ -1,64 +1,84 @@
-import React from 'react';
-import { Users, Server, HardDrive, Activity, Zap } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import React, { useState, useEffect } from 'react';
+import { adminService } from '@/services/apiServices';
+import { Users, Shield, Server, Key, Activity, RefreshCw } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function AdminDashboard() {
-  const kpis = [
-    { title: 'Total Users', value: '2,481', change: '+12%', icon: Users },
-    { title: 'Active Sessions', value: '184', change: '+5%', icon: Activity },
-    { title: 'API Requests / min', value: '1,204', change: '+18%', icon: Zap },
-    { title: 'System Health', value: '99.9%', change: 'Normal', icon: Server },
-    { title: 'Storage Used', value: '64%', change: '+2%', icon: HardDrive },
-  ];
+  const [metrics, setMetrics] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchHealth = async () => {
+    try {
+      setLoading(true);
+      const data = await adminService.getSystemHealth();
+      setMetrics(data);
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHealth();
+  }, []);
 
   return (
-    <div className="animate-in fade-in duration-500 max-w-7xl mx-auto">
-      <div className="mb-8">
-        <h1 className="font-headline-lg text-primary mb-2">Overview Dashboard</h1>
-        <p className="font-body-md text-on-surface-variant">
-          Real-time enterprise metrics for the AquaSense platform.
-        </p>
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+        <div>
+          <h1 className="text-2xl font-bold text-white flex items-center space-x-2">
+            <Shield className="w-6 h-6 text-cyan-400" />
+            <span>Enterprise Admin Control Center</span>
+          </h1>
+          <p className="text-xs text-slate-400 mt-1">
+            System administration, user access control, infrastructure monitoring, and security audit logs
+          </p>
+        </div>
+
+        <button onClick={fetchHealth} className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-white font-semibold flex items-center space-x-1.5">
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          <span>Sync Status</span>
+        </button>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
-        {kpis.map((kpi, idx) => (
-          <Card key={idx} className="hover:-translate-y-1 transition-transform">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <kpi.icon className="w-5 h-5 text-primary" />
-                </div>
-                <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                  kpi.change.startsWith('+') ? 'bg-secondary/20 text-secondary' : 
-                  kpi.change === 'Normal' ? 'bg-primary/20 text-primary' : 
-                  'bg-error/20 text-error'
-                }`}>
-                  {kpi.change}
-                </span>
-              </div>
-              <h3 className="font-headline-md text-primary">{kpi.value}</h3>
-              <p className="font-label-sm text-on-surface-variant uppercase tracking-wider">{kpi.title}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Navigation Quick Access */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Link to="/admin/users" className="p-5 bg-slate-900/60 hover:bg-slate-800/80 rounded-xl border border-slate-800 hover:border-cyan-500/50 transition group space-y-2">
+          <div className="flex justify-between items-center">
+            <Users className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition" />
+            <span className="text-xs text-cyan-400 font-bold">Manage &rarr;</span>
+          </div>
+          <h3 className="font-bold text-white text-base">Users & Roles</h3>
+          <p className="text-xs text-slate-400">Total Registered: {metrics?.metrics?.userCount || 2}</p>
+        </Link>
 
-      {/* Main Charts Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="col-span-2">
-          <CardContent className="p-6 h-[400px] flex flex-col justify-center items-center text-on-surface-variant">
-            <Activity className="w-12 h-12 mb-4 opacity-50" />
-            <p>System Traffic Chart (Coming Soon)</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6 h-[400px] flex flex-col justify-center items-center text-on-surface-variant">
-            <Server className="w-12 h-12 mb-4 opacity-50" />
-            <p>Server Load (Coming Soon)</p>
-          </CardContent>
-        </Card>
+        <Link to="/admin/system" className="p-5 bg-slate-900/60 hover:bg-slate-800/80 rounded-xl border border-slate-800 hover:border-cyan-500/50 transition group space-y-2">
+          <div className="flex justify-between items-center">
+            <Server className="w-6 h-6 text-emerald-400 group-hover:scale-110 transition" />
+            <span className="text-xs text-emerald-400 font-bold">Monitor &rarr;</span>
+          </div>
+          <h3 className="font-bold text-white text-base">System Health</h3>
+          <p className="text-xs text-slate-400">Memory: {metrics?.metrics?.serverMemoryMb || 128}MB | SQLite DB</p>
+        </Link>
+
+        <div className="p-5 bg-slate-900/60 rounded-xl border border-slate-800 space-y-2">
+          <div className="flex justify-between items-center">
+            <Activity className="w-6 h-6 text-cyan-400" />
+            <span className="text-xs text-emerald-400 font-bold">100%</span>
+          </div>
+          <h3 className="font-bold text-white text-base">Sensors Online</h3>
+          <p className="text-xs text-slate-400">{metrics?.metrics?.activeSensors || 5} of {metrics?.metrics?.sensorCount || 5} Sensors Active</p>
+        </div>
+
+        <div className="p-5 bg-slate-900/60 rounded-xl border border-slate-800 space-y-2">
+          <div className="flex justify-between items-center">
+            <Key className="w-6 h-6 text-amber-400" />
+            <span className="text-xs text-amber-400 font-bold">Active</span>
+          </div>
+          <h3 className="font-bold text-white text-base">API Keys & Tokens</h3>
+          <p className="text-xs text-slate-400">2 Enterprise Keys Active</p>
+        </div>
       </div>
     </div>
   );

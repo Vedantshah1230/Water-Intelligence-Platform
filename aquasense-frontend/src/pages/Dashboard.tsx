@@ -1,176 +1,216 @@
-import React, { useState, useEffect } from 'react';
-import { Droplet, ShieldCheck, ArrowRight, Lightbulb, AlertTriangle, Activity, X } from 'lucide-react';
-import { StatusCard } from '@/components/shared/StatusCard';
-import { Button } from '@/components/ui/button';
-import api from '@/lib/api';
+import React, { useState } from 'react';
+import { dashboardService } from '@/services/apiServices';
+import { useLivePolling } from '@/hooks/useLivePolling';
+import { 
+  Activity, AlertTriangle, Droplets, ShieldCheck, Thermometer, Wind, RefreshCw, Layers, Database, Cpu 
+} from 'lucide-react';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
-
-interface DashboardStats {
-  totalSensors: number;
-  activeAlerts: number;
-  totalReservoirs: number;
-}
 
 export function Dashboard() {
-  const navigate = useNavigate();
-  const [stats, setStats] = useState<DashboardStats>({
-    totalSensors: 0,
-    activeAlerts: 0,
-    totalReservoirs: 0
-  });
-  const [showReportModal, setShowReportModal] = useState(false);
-  const [reportText, setReportText] = useState('');
+  const { data, loading, error, lastUpdated, refresh } = useLivePolling(dashboardService.getTelemetry, 5000);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
-    api.get('/dashboard/stats')
-      .then(res => setStats(res.data))
-      .catch(err => console.error("Failed to load dashboard stats", err));
-  }, []);
-
-  const hasAlerts = stats.activeAlerts > 0;
-
-  const handleReportSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!reportText.trim()) return;
-    toast.success('Issue reported successfully to the maintenance team.');
-    setShowReportModal(false);
-    setReportText('');
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    await refresh();
+    setIsRefreshing(false);
+    toast.success('Dashboard metrics refreshed live');
   };
 
+  if (loading && !data) {
+    return (
+      <div className="p-8 flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <RefreshCw className="w-10 h-10 animate-spin text-cyan-400" />
+        <p className="text-slate-300 font-medium">Fetching real-time telemetry from AquaSense backend...</p>
+      </div>
+    );
+  }
+
+  if (error && !data) {
+    return (
+      <div className="p-8 bg-red-950/40 border border-red-800/50 rounded-xl text-red-200">
+        <h3 className="text-lg font-bold">Telemetry Offline</h3>
+        <p className="text-sm text-red-300/80 mb-4">{error}</p>
+        <button onClick={handleManualRefresh} className="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg text-white font-semibold text-sm transition">
+          Retry Connection
+        </button>
+      </div>
+    );
+  }
+
+  const { weather, systemOverview, aiInsight, reservoirs, sensors, activeAlerts, groundwater, systemHealth } = data || {};
+
   return (
-    <>
-      <div className="animate-in fade-in duration-500">
-        {/* Welcome Header */}
-        <section className="mb-gutter">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-3xl">👋</span>
-            <h2 className="font-headline-lg-mobile md:font-headline-lg text-on-surface">Welcome back, Sam.</h2>
+    <div className="space-y-6">
+      {/* Top Bar with Live Refresh & Status Indicator */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+        <div>
+          <div className="flex items-center space-x-3">
+            <h1 className="text-2xl font-bold text-white tracking-tight">Enterprise Water Command</h1>
+            <span className="flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>LIVE POLLING (5s)</span>
+            </span>
           </div>
-          <p className="font-body-md text-on-surface-variant">
-            {hasAlerts ? `You have ${stats.activeAlerts} active alerts.` : 'Water conditions are healthy today.'}
+          <p className="text-xs text-slate-400 mt-1">
+            Last Updated: {lastUpdated ? lastUpdated.toLocaleTimeString() : 'Just now'} | Monitoring Metro Water Grid
           </p>
-        </section>
-
-        {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-          
-          {/* Main Water Status Card */}
-          <div className="md:col-span-8 bg-surface-container-lowest rounded-xl p-gutter shadow-sm border border-outline-variant flex flex-col justify-between min-h-[300px] relative overflow-hidden group hover:shadow-md transition-shadow">
-            <div className="relative z-10">
-              <div className="flex justify-between items-start mb-gutter">
-                <div>
-                  <p className="font-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Current Overall Status</p>
-                  <h3 className="font-headline-lg text-primary">System Health</h3>
-                </div>
-                <span className={`px-4 py-1 rounded-full font-label-md flex items-center gap-2 ${hasAlerts ? 'bg-error-container text-on-error-container' : 'bg-secondary-container text-on-secondary-container'}`}>
-                  <span className={`w-2 h-2 rounded-full ${hasAlerts ? 'bg-error' : 'bg-secondary'} status-pulse`}></span>
-                  {hasAlerts ? 'Alert Active' : 'Healthy'}
-                </span>
-              </div>
-              <p className="font-body-md text-on-surface-variant max-w-md">
-                Monitoring {stats.totalSensors} active IoT sensors across the city grid in real-time.
-              </p>
-            </div>
-            
-            <div className="mt-gutter flex items-end justify-between relative z-10">
-              <div className="flex gap-4">
-                <div className="flex flex-col">
-                  <span className="font-headline-lg-mobile text-primary">{stats.totalReservoirs}</span>
-                  <span className="font-label-md text-outline">Reservoirs</span>
-                </div>
-                <div className="w-px h-10 bg-outline-variant"></div>
-                <div className="flex flex-col">
-                  <span className="font-headline-lg-mobile text-primary">{stats.totalSensors}</span>
-                  <span className="font-label-md text-outline">Sensors</span>
-                </div>
-              </div>
-              <Button variant="default" size="sm" onClick={() => navigate('/dashboard/map')}>
-                Full Systems View
-              </Button>
-            </div>
-            
-            {/* Abstract Decorative SVG Element */}
-            <div className="absolute -right-10 -bottom-10 opacity-5 pointer-events-none transition-transform group-hover:scale-105 duration-700">
-              <svg height="300" viewBox="0 0 200 200" width="300" xmlns="http://www.w3.org/2000/svg">
-                <path d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,77.3,-44.7C85.4,-31.3,90.5,-15.6,89.4,-0.6C88.3,14.4,81,28.8,72.4,42.4C63.8,56,53.8,68.8,40.4,76.5C27,84.2,10.2,86.8,-6,87.8C-22.2,88.8,-37.8,88.2,-51.2,80.5C-64.6,72.8,-75.8,58.1,-82.1,42.4C-88.4,26.7,-89.8,10,-88.4,-6.2C-87,-22.4,-82.8,-38.1,-74.1,-51.3C-65.4,-64.5,-52.2,-75.2,-37.8,-82C-23.4,-88.8,-7.8,-91.7,3.5,-92.3C14.8,-92.9,29.6,-91.2,44.7,-76.4Z" fill="#38bdf8" transform="translate(100 100)"></path>
-              </svg>
-            </div>
-          </div>
-
-          {/* Daily Tip Card */}
-          <div className="md:col-span-4 bg-tertiary-fixed text-on-tertiary-fixed rounded-xl p-gutter border border-outline-variant flex flex-col justify-between hover:shadow-md transition-shadow">
-            <div>
-              <div className="w-12 h-12 bg-surface-container-lowest rounded-full flex items-center justify-center mb-gutter shadow-sm">
-                <Lightbulb className="w-6 h-6 text-primary" />
-              </div>
-              <h4 className="font-headline-lg-mobile mb-base">AI Insight</h4>
-              <p className="font-body-md opacity-90">Based on your consumption trends, you can reduce waste by 15%.</p>
-            </div>
-            <button onClick={() => navigate('/dashboard/predictions')} className="mt-gutter font-label-md text-on-tertiary-fixed-variant flex items-center gap-2 group font-semibold">
-              Learn more 
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-
-          {/* Metric Cards */}
-          <StatusCard 
-            className="md:col-span-6"
-            title="Active Alerts"
-            value={stats.activeAlerts.toString()}
-            status={stats.activeAlerts > 0 ? 'Critical' : 'Good'}
-            description={hasAlerts ? 'AI detected anomalies needing attention.' : 'No active anomalies detected.'}
-            actionLabel="View Alerts"
-            onAction={() => navigate('/dashboard/alerts')}
-            icon={Activity}
-          />
-          
-          <StatusCard 
-            className="md:col-span-6"
-            title="Reservoir Capacity"
-            value={stats.totalReservoirs.toString()}
-            status="Good"
-            description="Total active reservoirs currently monitored."
-            actionLabel="View details"
-            onAction={() => navigate('/dashboard/reports')}
-            icon={Droplet}
-          />
         </div>
 
-        {/* Call to Action Section */}
-        <section className="mt-gutter pb-gutter">
-          <Button onClick={() => setShowReportModal(true)} variant="error" size="lg" className="w-full flex gap-3 text-xl shadow-lg shadow-error/10 h-16 rounded-xl font-headline-lg-mobile">
-            <AlertTriangle className="w-6 h-6" />
-            Report an Issue
-          </Button>
-        </section>
+        <button
+          onClick={handleManualRefresh}
+          disabled={isRefreshing}
+          className="flex items-center justify-center space-x-2 px-4 py-2 bg-cyan-600/80 hover:bg-cyan-500 text-white rounded-lg text-sm font-semibold transition border border-cyan-400/30 shadow-lg shadow-cyan-950/50"
+        >
+          <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <span>Refresh Metrics</span>
+        </button>
       </div>
 
-      {/* Report Modal */}
-      {showReportModal && (
-        <div className="fixed inset-0 bg-inverse-surface/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4" onClick={() => setShowReportModal(false)}>
-          <div className="bg-surface-container-lowest w-full max-w-lg rounded-2xl p-6 shadow-2xl relative" onClick={e => e.stopPropagation()}>
-            <button onClick={() => setShowReportModal(false)} className="absolute top-4 right-4 text-outline hover:text-on-surface">
-              <X className="w-6 h-6" />
-            </button>
-            <h3 className="font-headline-md text-on-surface mb-2">Report an Issue</h3>
-            <p className="text-on-surface-variant font-body-sm mb-6">Describe the anomaly or issue you have detected in the network. A support ticket will be generated.</p>
-            <form onSubmit={handleReportSubmit}>
-              <textarea 
-                value={reportText}
-                onChange={e => setReportText(e.target.value)}
-                placeholder="E.g., Unusual pressure drop at Sector 4 pump station..." 
-                className="w-full h-32 bg-surface-container p-4 rounded-xl border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary text-on-surface resize-none mb-4" 
-                autoFocus 
-              />
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowReportModal(false)} type="button">Cancel</Button>
-                <Button variant="default" type="submit">Submit Report</Button>
+      {/* Hero Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* System Health */}
+        <div className="p-5 bg-gradient-to-br from-slate-900 to-slate-950 rounded-xl border border-slate-800 hover:border-cyan-500/40 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">System Status</span>
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black text-white">{systemOverview?.systemStatus || 'Healthy'}</span>
+            <span className="text-xs font-medium text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-800/50">
+              100% Operational
+            </span>
+          </div>
+          <p className="text-xs text-slate-400 mt-2">
+            Monitoring {systemOverview?.activeSensors || 0} active IoT sensors in real-time.
+          </p>
+        </div>
+
+        {/* Reservoir Capacity */}
+        <div className="p-5 bg-gradient-to-br from-slate-900 to-slate-950 rounded-xl border border-slate-800 hover:border-cyan-500/40 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Avg Reservoir Level</span>
+            <Droplets className="w-5 h-5 text-cyan-400" />
+          </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black text-white">{systemOverview?.avgReservoirLevelPct || 0}%</span>
+            <span className="text-xs font-medium text-cyan-400 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800/50">
+              {systemOverview?.reservoirsCount || 0} Dams Active
+            </span>
+          </div>
+          <p className="text-xs text-slate-400 mt-2">Total capacity: 1,647.9 Million Liters</p>
+        </div>
+
+        {/* Active Alerts */}
+        <div className="p-5 bg-gradient-to-br from-slate-900 to-slate-950 rounded-xl border border-slate-800 hover:border-amber-500/40 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Anomalies</span>
+            <AlertTriangle className="w-5 h-5 text-amber-400" />
+          </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black text-white">{systemOverview?.activeAlertsCount || 0}</span>
+            <span className="text-xs font-medium text-amber-400 bg-amber-950/50 px-2 py-0.5 rounded border border-amber-800/50">
+              Requires Review
+            </span>
+          </div>
+          <p className="text-xs text-slate-400 mt-2">Leaks, pressure drops, or quality warnings</p>
+        </div>
+
+        {/* Live Weather */}
+        <div className="p-5 bg-gradient-to-br from-slate-900 to-slate-950 rounded-xl border border-slate-800 hover:border-cyan-500/40 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Current Weather</span>
+            <Thermometer className="w-5 h-5 text-cyan-400" />
+          </div>
+          <div className="mt-3 flex items-baseline justify-between">
+            <span className="text-2xl font-black text-white">{weather?.temp_c}°C</span>
+            <span className="text-xs font-medium text-slate-300 flex items-center gap-1">
+              <Wind className="w-3.0 h-3.0 text-slate-400" /> {weather?.humidity}% Hum
+            </span>
+          </div>
+          <p className="text-xs text-slate-400 mt-2">{weather?.location} • {weather?.condition}</p>
+        </div>
+      </div>
+
+      {/* AI Risk Score Banner */}
+      <div className="p-6 bg-gradient-to-r from-cyan-950/60 via-slate-900 to-indigo-950/60 rounded-xl border border-cyan-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center space-x-2">
+            <Activity className="w-5 h-5 text-cyan-400" />
+            <h3 className="font-bold text-white text-lg">AI Shortage & Anomaly Risk Analysis</h3>
+          </div>
+          <p className="text-sm text-slate-300">
+            Target: <span className="font-semibold text-cyan-300">{aiInsight?.target}</span> • Risk Level:{' '}
+            <span className={`font-bold px-2 py-0.5 rounded text-xs ${aiInsight?.riskLevel === 'High' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
+              {aiInsight?.riskLevel} ({aiInsight?.riskScore}% Probability)
+            </span>
+          </p>
+          <p className="text-xs text-slate-400">{aiInsight?.recommendation}</p>
+        </div>
+      </div>
+
+      {/* Reservoir & Sensor Detail Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Reservoirs */}
+        <div className="p-5 bg-slate-900/60 rounded-xl border border-slate-800 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 className="font-bold text-white flex items-center space-x-2">
+              <Layers className="w-4 h-4 text-cyan-400" />
+              <span>Monitored Reservoirs</span>
+            </h3>
+            <span className="text-xs text-slate-400">Live Levels</span>
+          </div>
+
+          <div className="space-y-3">
+            {reservoirs?.map((r: any) => (
+              <div key={r.id} className="p-3 bg-slate-950/50 rounded-lg border border-slate-800/80 space-y-2">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="font-semibold text-slate-200">{r.name}</span>
+                  <span className="text-cyan-400 font-mono font-bold">{r.current_level}%</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                  <div 
+                    className={`h-2 rounded-full transition-all duration-500 ${r.current_level < 65 ? 'bg-amber-500' : 'bg-cyan-500'}`} 
+                    style={{ width: `${r.current_level}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs text-slate-400">
+                  <span>Capacity: {r.capacity} ML</span>
+                  <span>Inflow: {r.today_inflow} ML/d</span>
+                </div>
               </div>
-            </form>
+            ))}
           </div>
         </div>
-      )}
-    </>
+
+        {/* System & API Infrastructure Health */}
+        <div className="p-5 bg-slate-900/60 rounded-xl border border-slate-800 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 className="font-bold text-white flex items-center space-x-2">
+              <Cpu className="w-4 h-4 text-emerald-400" />
+              <span>Infrastructure & API Node Status</span>
+            </h3>
+            <span className="text-xs text-emerald-400 font-semibold">ALL SYSTEMS NOMINAL</span>
+          </div>
+
+          <div className="space-y-3">
+            {systemHealth?.map((h: any) => (
+              <div key={h.id} className="flex items-center justify-between p-3 bg-slate-950/50 rounded-lg border border-slate-800/80">
+                <div className="flex items-center space-x-3">
+                  <Database className="w-4 h-4 text-slate-400" />
+                  <div>
+                    <p className="text-sm font-semibold text-slate-200">{h.serviceName}</p>
+                    <p className="text-xs text-slate-500">Latency: {h.latencyMs}ms | RAM: {h.memoryUsageMb}MB</p>
+                  </div>
+                </div>
+                <span className="px-2.5 py-1 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  {h.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -1,73 +1,225 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  role      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  id           String        @id @default(uuid())
+  name         String
+  role         String        @default("OPERATOR") // ADMIN, OPERATOR, ANALYST, CITIZEN
+  email        String        @unique
+  password     String
+  department   String?       @default("Water Management")
+  status       String        @default("Active") // Active, Inactive, Suspended
+  createdAt    DateTime      @default(now())
+  AuditLog     AuditLog[]
+  Notification Notification[]
 }
 
-model WaterConsumption {
+model Role {
   id          String   @id @default(uuid())
-  area        String
-  date        DateTime
-  liters_used Float
+  name        String   @unique
+  permissions String   // JSON string of permissions
+  description String?
   createdAt   DateTime @default(now())
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  head      String?
+  createdAt DateTime @default(now())
 }
 
 model Reservoir {
   id            String   @id @default(uuid())
   name          String
-  capacity      Float
-  current_level Float
+  capacity      Float    // in Million Liters
+  current_level Float    // percentage 0-100
   today_inflow  Float?   @default(0)
   today_outflow Float?   @default(0)
+  latitude      Float?   @default(19.0760)
+  longitude     Float?   @default(72.8777)
+  location      String   @default("Mumbai Metro Zone")
+  status        String   @default("Normal") // Normal, Critical, Warning
   createdAt     DateTime @default(now())
+}
+
+model Sensor {
+  id        String   @id @default(uuid())
+  sensor_id String   @unique
+  name      String
+  type      String   // Flow, Pressure, Quality, Acoustic
+  location  String
+  latitude  Float
+  longitude Float
+  status    String   @default("Active") // Active, Inactive, Maintenance, Malfunctioning
+  flow_rate Float    @default(0)
+  pressure  Float    @default(0)
+  quality   Float    @default(95)
+  lastPing  DateTime @default(now())
+  createdAt DateTime @default(now())
+}
+
+model SensorData {
+  id        String   @id @default(uuid())
+  sensor_id String
+  flow_rate Float
+  pressure  Float
+  quality   Float
+  timestamp DateTime @default(now())
+}
+
+model GroundwaterStation {
+  id                String   @id @default(uuid())
+  name              String
+  depth_meters      Float
+  water_table_level Float
+  location          String
+  latitude          Float
+  longitude         Float
+  status            String   @default("Stable") // Stable, Depleting, Critical
+  createdAt         DateTime @default(now())
+}
+
+model Pipeline {
+  id           String   @id @default(uuid())
+  name         String
+  material     String   // Cast Iron, HDPE, Steel
+  length_km    Float
+  startLat     Float
+  startLng     Float
+  endLat       Float
+  endLng       Float
+  status       String   @default("Good") // Good, Risk, Leaking
+  health_score Float    @default(100)
+  createdAt    DateTime @default(now())
+}
+
+model WaterConsumption {
+  id            String   @id @default(uuid())
+  area          String
+  date          DateTime
+  liters_used   Float
+  target_liters Float    @default(1000000)
+  createdAt     DateTime @default(now())
+}
+
+model Alert {
+  id        String   @id @default(uuid())
+  type      String   // Shortage, Leak, Contamination, High Pressure
+  severity  String   // Low, Medium, High, Critical
+  location  String
+  message   String   @default("Anomaly detected in system telemetry.")
+  status    String   @default("Active") // Active, Investigating, Resolved, Acknowledged
+  latitude  Float?   @default(19.0760)
+  longitude Float?   @default(72.8777)
+  timestamp DateTime @default(now())
 }
 
 model CitizenReport {
   id          String   @id @default(uuid())
   title       String
   description String
+  category    String   @default("Leakage") // Leakage, Low Pressure, Contamination, Waste
   latitude    Float
   longitude   Float
+  location    String?  @default("City Center")
   status      String   @default("Pending") // Pending, Investigating, Resolved
+  reportedBy  String   @default("Anonymous Citizen")
+  upvotes     Int      @default(0)
   createdAt   DateTime @default(now())
 }
 
-model SensorData {
-  id         String   @id @default(uuid())
-  sensor_id  String
-  flow_rate  Float
-  pressure   Float
-  quality    Float
-  timestamp  DateTime @default(now())
+model Prediction {
+  id                String   @id @default(uuid())
+  target            String   // Sector, Reservoir, or City
+  score             Float    // Shortage or failure probability (0-100)
+  risk_level        String   @default("Low") // Low, Medium, High, Critical
+  confidence        Float    @default(90.0)
+  recommendedAction String   @default("Normal monitoring")
+  date              DateTime @default(now())
 }
 
-model Alert {
+model AuditLog {
   id        String   @id @default(uuid())
-  type      String
-  severity  String
-  location  String
-  status    String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userName  String   @default("System")
+  action    String
+  details   String
+  ipAddress String?  @default("127.0.0.1")
   timestamp DateTime @default(now())
 }
 
-model Prediction {
-  id        String   @id @default(uuid())
-  target    String
-  score     Float
-  date      DateTime @default(now())
+model SystemHealth {
+  id             String   @id @default(uuid())
+  serviceName    String   @unique
+  status         String   @default("Operational") // Operational, Degraded, Down
+  latencyMs      Float    @default(12)
+  memoryUsageMb  Float    @default(128)
+  lastChecked    DateTime @default(now())
 }
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  title     String
+  message   String
+  type      String   @default("INFO") // INFO, WARNING, ALERT, SUCCESS
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model ApiKey {
+  id        String    @id @default(uuid())
+  name      String
+  key       String    @unique
+  owner     String
+  status    String    @default("Active") // Active, Revoked
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model AiModelVersion {
+  id          String   @id @default(uuid())
+  name        String   // e.g. Shortage_RF_v2, Leak_IsoForest_v1
+  version     String   // v1.2.0
+  status      String   @default("Active") // Active, Archived, Candidate
+  accuracy    Float    @default(0.92)
+  precision   Float    @default(0.89)
+  recall      Float    @default(0.91)
+  f1Score     Float    @default(0.90)
+  mae         Float    @default(2.4)
+  rmse        Float    @default(3.1)
+  trainedAt   DateTime @default(now())
+}
+
+model AiPredictionRun {
+  id           String   @id @default(uuid())
+  horizon      String   // 7D, 30D, 90D
+  target       String   // Metro Grid, Reservoir A, Sector 4
+  riskScore    Float    // 0-100
+  shortageProb Float    // 0-100
+  detailsJson  String   // JSON string of multi-horizon predictions
+  date         DateTime @default(now())
+}
+
+model AiRecommendation {
+  id           String   @id @default(uuid())
+  priority     String   // CRITICAL, HIGH, MEDIUM, LOW
+  title        String
+  description  String
+  category     String   // Release, Restrict, Repair, Harvest, Recharge
+  targetSector String
+  impactScore  Float    @default(15.0)
+  isExecuted   Boolean  @default(false)
+  date         DateTime @default(now())
+}
+

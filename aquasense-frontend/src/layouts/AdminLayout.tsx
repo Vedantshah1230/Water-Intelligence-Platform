@@ -1,8 +1,9 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Shield, Settings, Server, LogOut, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, Shield, Settings, Server, LogOut, Bell, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { AquaSenseAIAssistant } from '@/components/chat/AquaSenseAIAssistant';
 
 export function AdminLayout() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export function AdminLayout() {
     { name: 'Roles & Permissions', path: '/admin/roles', icon: Shield },
     { name: 'System Monitoring', path: '/admin/system', icon: Server },
     { name: 'Settings', path: '/admin/settings', icon: Settings },
+    { name: 'User Dashboard', path: '/dashboard', icon: ArrowLeft },
   ];
 
   const handleLogout = () => {
@@ -82,6 +84,7 @@ export function AdminLayout() {
           <Outlet />
         </div>
       </main>
+      <AquaSenseAIAssistant />
     </div>
   );
 }

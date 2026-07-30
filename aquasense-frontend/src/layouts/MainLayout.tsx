@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { TopAppBar } from '@/components/shared/TopAppBar';
 import { BottomNavBar } from '@/components/shared/BottomNavBar';
 import { Sidebar } from '@/components/shared/Sidebar';
+import { AquaSenseAIAssistant } from '@/components/chat/AquaSenseAIAssistant';
 
 export function MainLayout() {
   return (
@@ -15,6 +16,7 @@ export function MainLayout() {
         </main>
       </div>
       <BottomNavBar />
+      <AquaSenseAIAssistant />
     </div>
   );
 }
