@@ -4,8 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Get real-time unified dashboard metrics
-router.get('/', async (req: Request, res: Response) => {
+const getDashboardStats = async (req: Request, res: Response) => {
   try {
     const [reservoirs, sensors, alerts, groundwater, predictions, health, consumption] = await Promise.all([
       prisma.reservoir.findMany(),
@@ -65,6 +64,9 @@ router.get('/', async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({ error: 'Failed to fetch dashboard telemetry', details: error.message });
   }
-});
+};
+
+router.get('/', getDashboardStats);
+router.get('/stats', getDashboardStats);
 
 export default router;

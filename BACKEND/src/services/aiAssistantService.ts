@@ -396,5 +396,89 @@ export const aiAssistantService = {
       groundwaterRechargedLiters: 6200000,
       sdg6Index: 91.5
     };
+  },
+
+  /**
+   * Autonomous Function Calling: Create Emergency Alert
+   */
+  executeAlertCreation: async (data: { type?: string; severity?: string; location?: string; message?: string }) => {
+    const alert = await prisma.alert.create({
+      data: {
+        type: data.type || 'Leak',
+        severity: data.severity || 'Critical',
+        location: data.location || 'Thane MIDC Main Duct',
+        message: data.message || 'Autonomous AI Command Center emergency alert dispatch.',
+        status: 'Active'
+      }
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        action: 'AI_COMMAND_CREATE_ALERT',
+        details: `Autonomous AI created ${alert.severity} ${alert.type} alert for ${alert.location}`,
+        userName: 'AquaSense AI Command Center'
+      }
+    });
+
+    return alert;
+  },
+
+  /**
+   * Autonomous Function Calling: Assign Engineer Repair Team
+   */
+  executeEngineerAssignment: async (data: { location?: string; engineerName?: string }) => {
+    const engineer = data.engineerName || 'Eng. Rahul Sharma (Rapid Repair Unit 4)';
+    const loc = data.location || 'Thane MIDC Main Duct';
+
+    const log = await prisma.auditLog.create({
+      data: {
+        action: 'AI_COMMAND_ASSIGN_ENGINEER',
+        details: `Dispatched ${engineer} to investigate and isolate leak at ${loc}`,
+        userName: 'AquaSense AI Command Center'
+      }
+    });
+
+    return {
+      assignmentId: log.id,
+      engineerName: engineer,
+      location: loc,
+      dispatchedAt: log.timestamp,
+      estimatedArrivalMinutes: 25,
+      status: 'DISPATCHED'
+    };
+  },
+
+  /**
+   * Autonomous Function Calling: Compare Reservoirs
+   */
+  executeReservoirComparison: async () => {
+    const reservoirs = await prisma.reservoir.findMany();
+    return reservoirs.map(r => ({
+      name: r.name,
+      capacityML: r.capacity,
+      currentLevelPct: r.current_level,
+      todayInflowML: r.today_inflow || 0,
+      todayOutflowML: r.today_outflow || 0,
+      status: r.status,
+      location: r.location
+    }));
+  },
+
+  /**
+   * Autonomous Function Calling: Generate Telemetry CSV Export
+   */
+  generateTelemetryCSV: async () => {
+    const reservoirs = await prisma.reservoir.findMany();
+    const alerts = await prisma.alert.findMany();
+
+    let csv = 'Timestamp,Type,Location,Value,Status\n';
+    reservoirs.forEach(r => {
+      csv += `${r.createdAt.toISOString()},Reservoir,${r.name},${r.current_level}%,${r.status}\n`;
+    });
+    alerts.forEach(a => {
+      csv += `${a.timestamp.toISOString()},Alert,${a.location},${a.severity},${a.status}\n`;
+    });
+
+    return csv;
   }
 };

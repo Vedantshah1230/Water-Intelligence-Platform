@@ -17,16 +17,18 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
-// Get consumption records
-router.get('/', async (req: Request, res: Response) => {
+const getConsumption = async (req: Request, res: Response) => {
   try {
     const consumptionRecords = await prisma.waterConsumption.findMany({
       orderBy: { date: 'desc' }
     });
     res.json(consumptionRecords);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch consumption data' });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to fetch consumption data', details: err.message });
   }
-});
+};
+
+router.get('/', getConsumption);
+router.get('/water-consumption', getConsumption);
 
 export default router;

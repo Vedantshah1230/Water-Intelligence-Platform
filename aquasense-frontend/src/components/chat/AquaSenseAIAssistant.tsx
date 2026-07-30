@@ -35,6 +35,63 @@ const DEFAULT_SUGGESTED_QUESTIONS = [
   'What are the BIS 10500 water quality standards?'
 ];
 
+// Helper to parse inline markdown formatting (bold, italic, inline code)
+function parseInlineFormatting(text: string) {
+  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return <strong key={index} className="font-bold text-slate-900 dark:text-white">{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith('*') && part.endsWith('*')) {
+      return <em key={index} className="italic text-slate-700 dark:text-slate-300">{part.slice(1, -1)}</em>;
+    }
+    if (part.startsWith('`') && part.endsWith('`')) {
+      return <code key={index} className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 font-mono text-xs text-primary dark:text-cyan-400 rounded">{part.slice(1, -1)}</code>;
+    }
+    return part;
+  });
+}
+
+// Markdown Renderer Component for AI Responses
+function FormatMarkdown({ content }: { content: string }) {
+  const lines = content.split('\n');
+  return (
+    <div className="space-y-1.5 font-sans text-sm leading-relaxed">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={idx} className="h-1" />;
+
+        if (trimmed.startsWith('### ')) {
+          return (
+            <h3 key={idx} className="font-bold text-base text-primary dark:text-cyan-400 mt-2 mb-1">
+              {trimmed.replace(/^###\s*/, '')}
+            </h3>
+          );
+        }
+        if (trimmed.startsWith('## ')) {
+          return (
+            <h2 key={idx} className="font-bold text-lg text-primary dark:text-cyan-400 mt-2 mb-1">
+              {trimmed.replace(/^##\s*/, '')}
+            </h2>
+          );
+        }
+
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          const itemText = trimmed.replace(/^[-*]\s*/, '');
+          return (
+            <div key={idx} className="flex items-start gap-2 ml-2">
+              <span className="text-primary dark:text-cyan-400 font-bold">•</span>
+              <span>{parseInlineFormatting(itemText)}</span>
+            </div>
+          );
+        }
+
+        return <p key={idx}>{parseInlineFormatting(line)}</p>;
+      })}
+    </div>
+  );
+}
+
 export function AquaSenseAIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -74,6 +131,13 @@ export function AquaSenseAIAssistant() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  // Listen to global open event (e.g. from Sidebar "Open Chat" button)
+  useEffect(() => {
+    const handleOpenChat = () => setIsOpen(true);
+    window.addEventListener('open-aquasense-ai-chat', handleOpenChat);
+    return () => window.removeEventListener('open-aquasense-ai-chat', handleOpenChat);
+  }, []);
 
   // Load chat history & RAG stats
   useEffect(() => {
@@ -259,6 +323,36 @@ export function AquaSenseAIAssistant() {
     }
   };
 
+  // Autonomous Function Calling Command Center Executor
+  const handleExecuteFunction = async (command: 'CREATE_ALERT' | 'ASSIGN_ENGINEER' | 'COMPARE_RESERVOIRS' | 'EXPORT_CSV') => {
+    setIsLoading(true);
+    try {
+      if (command === 'EXPORT_CSV') {
+        const blob = await aiAssistantApi.executeCommand('EXPORT_CSV');
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `AquaSense_Telemetry_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        toast.success('Telemetry CSV dataset downloaded');
+      } else {
+        const res = await aiAssistantApi.executeCommand(command);
+        toast.success(res.message || 'Command executed successfully');
+        const botMsg: ChatMessage = {
+          id: `cmd-${Date.now()}`,
+          sender: 'assistant',
+          text: `### ⚡ Autonomous Function Call Executed\n\n**Command:** \`${command}\`\n${res.message || 'Action performed successfully.'}`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages((prev) => [...prev, botMsg]);
+      }
+    } catch (e: any) {
+      toast.error('Failed to execute command function');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Action Button Handler
   const handleActionClick = (action: NonNullable<ChatMessage['actions']>[0]) => {
     if (action.type === 'NAVIGATE') {
@@ -330,7 +424,7 @@ export function AquaSenseAIAssistant() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-primary to-primary/80 text-white rounded-full shadow-2xl hover:scale-105 transition-all duration-300 group border border-white/20 backdrop-blur-md"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-primary to-sky-600 text-white rounded-full shadow-2xl hover:scale-105 transition-all duration-300 group border border-white/30 backdrop-blur-md"
         >
           <div className="relative">
             <Sparkles className="w-5 h-5 animate-pulse text-amber-300" />
@@ -343,33 +437,33 @@ export function AquaSenseAIAssistant() {
       {/* Main Chat Assistant Window */}
       {isOpen && (
         <div
-          className={`fixed z-50 transition-all duration-300 flex flex-col shadow-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-white/30 dark:border-slate-800 rounded-2xl overflow-hidden ${
+          className={`fixed z-50 transition-all duration-300 flex flex-col shadow-2xl bg-slate-900 text-white border border-slate-800 rounded-2xl overflow-hidden ${
             isExpanded
               ? 'inset-4 sm:inset-8'
-              : 'bottom-4 right-4 w-[95vw] sm:w-[540px] h-[670px] max-h-[88vh]'
+              : 'bottom-4 right-4 w-[95vw] sm:w-[560px] h-[690px] max-h-[90vh]'
           }`}
         >
           {/* Top Bar Header */}
-          <div className="flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border-b border-outline-variant/30">
+          <div className="flex items-center justify-between px-5 py-3.5 bg-slate-950 text-white border-b border-slate-800 shadow-md">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary text-white rounded-xl shadow-md">
                 <Bot className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-base text-on-surface dark:text-white">AquaSense AI</h3>
-                  <span className="px-2 py-0.5 text-[10px] font-bold bg-primary/10 text-primary rounded-full">v4.2 PRO RAG</span>
+                  <h3 className="font-bold text-base text-white">AquaSense AI</h3>
+                  <span className="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full">v4.2 PRO RAG</span>
                 </div>
-                <p className="text-xs text-on-surface-variant dark:text-slate-400">Your Intelligent Water Management Expert</p>
+                <p className="text-xs text-slate-400">Your Intelligent Water Management Expert</p>
               </div>
             </div>
 
-            {/* Top Bar Actions */}
+            {/* Top Bar Controls */}
             <div className="flex items-center gap-1.5">
               <select
                 value={userRole}
                 onChange={(e) => setUserRole(e.target.value as UserRole)}
-                className="text-xs bg-white/80 dark:bg-slate-800 border border-outline-variant/40 rounded-lg px-2 py-1 text-on-surface dark:text-slate-200"
+                className="text-xs bg-slate-800 text-white border border-slate-700 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
                 title="Switch Persona Role"
               >
                 <option value="WATER_OFFICER">Water Officer</option>
@@ -383,7 +477,7 @@ export function AquaSenseAIAssistant() {
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value as Language)}
-                className="text-xs bg-white/80 dark:bg-slate-800 border border-outline-variant/40 rounded-lg px-2 py-1 text-on-surface dark:text-slate-200"
+                className="text-xs bg-slate-800 text-white border border-slate-700 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-cyan-500 focus:outline-none"
                 title="Switch Language"
               >
                 <option value="en">English</option>
@@ -393,14 +487,14 @@ export function AquaSenseAIAssistant() {
 
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg text-on-surface-variant dark:text-slate-300"
+                className="p-1.5 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors"
               >
                 {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
               </button>
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg text-on-surface-variant dark:text-slate-300"
+                className="p-1.5 hover:bg-white/10 rounded-lg text-slate-300 hover:text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -408,13 +502,13 @@ export function AquaSenseAIAssistant() {
           </div>
 
           {/* Navigation Sub-Header Tabs */}
-          <div className="flex border-b border-outline-variant/20 bg-surface-container-low/50 px-4 text-xs font-semibold">
+          <div className="flex border-b border-slate-800 bg-slate-950/80 px-4 text-xs font-semibold">
             <button
               onClick={() => setActiveTab('chat')}
-              className={`flex items-center gap-1.5 py-2.5 px-3 border-b-2 transition-colors ${
+              className={`flex items-center gap-1.5 py-3 px-3 border-b-2 transition-colors ${
                 activeTab === 'chat'
-                  ? 'border-primary text-primary font-bold'
-                  : 'border-transparent text-on-surface-variant hover:text-on-surface'
+                  ? 'border-cyan-400 text-cyan-400 font-bold'
+                  : 'border-transparent text-slate-400 hover:text-slate-200'
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
@@ -423,10 +517,10 @@ export function AquaSenseAIAssistant() {
 
             <button
               onClick={() => setActiveTab('simulator')}
-              className={`flex items-center gap-1.5 py-2.5 px-3 border-b-2 transition-colors ${
+              className={`flex items-center gap-1.5 py-3 px-3 border-b-2 transition-colors ${
                 activeTab === 'simulator'
-                  ? 'border-primary text-primary font-bold'
-                  : 'border-transparent text-on-surface-variant hover:text-on-surface'
+                  ? 'border-cyan-400 text-cyan-400 font-bold'
+                  : 'border-transparent text-slate-400 hover:text-slate-200'
               }`}
             >
               <Sliders className="w-3.5 h-3.5" />
@@ -435,20 +529,20 @@ export function AquaSenseAIAssistant() {
 
             <button
               onClick={() => setActiveTab('knowledge')}
-              className={`flex items-center gap-1.5 py-2.5 px-3 border-b-2 transition-colors ${
+              className={`flex items-center gap-1.5 py-3 px-3 border-b-2 transition-colors ${
                 activeTab === 'knowledge'
-                  ? 'border-primary text-primary font-bold'
-                  : 'border-transparent text-on-surface-variant hover:text-on-surface'
+                  ? 'border-cyan-400 text-cyan-400 font-bold'
+                  : 'border-transparent text-slate-400 hover:text-slate-200'
               }`}
             >
               <Database className="w-3.5 h-3.5" />
-              Vector Memory ({knowledgeStats?.totalChunks || 15})
+              Vector Memory ({knowledgeStats?.totalChunks || 16})
             </button>
           </div>
 
           {/* TAB 1: Conversational Chat */}
           {activeTab === 'chat' && (
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className="flex-1 flex flex-col overflow-hidden bg-slate-900 text-slate-100">
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((msg) => (
                   <div
@@ -456,7 +550,7 @@ export function AquaSenseAIAssistant() {
                     className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {msg.sender === 'assistant' && (
-                      <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary flex-shrink-0 mt-1">
+                      <div className="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-300 flex-shrink-0 mt-1">
                         <Bot className="w-4 h-4" />
                       </div>
                     )}
@@ -465,28 +559,29 @@ export function AquaSenseAIAssistant() {
                       <div
                         className={`p-4 rounded-2xl text-sm leading-relaxed ${
                           msg.sender === 'user'
-                            ? 'bg-primary text-white rounded-br-none shadow-md'
-                            : 'bg-white/80 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-outline-variant/30 rounded-bl-none shadow-sm'
+                            ? 'bg-primary text-white rounded-br-none shadow-md font-medium'
+                            : 'bg-slate-800/90 text-slate-100 border border-slate-700 rounded-bl-none shadow-sm'
                         }`}
                       >
-                        <div className="whitespace-pre-wrap font-sans">{msg.text}</div>
+                        {/* Rich Markdown Formatting */}
+                        <FormatMarkdown content={msg.text} />
 
                         {msg.dataCard && (
-                          <div className="mt-3 p-3 bg-surface-container-lowest dark:bg-slate-900/80 rounded-xl border border-outline-variant/30 space-y-2">
-                            <h4 className="font-bold text-xs text-primary flex items-center gap-1.5">
+                          <div className="mt-3 p-3 bg-slate-900 rounded-xl border border-slate-700 space-y-2">
+                            <h4 className="font-bold text-xs text-cyan-400 flex items-center gap-1.5">
                               <TrendingUp className="w-3.5 h-3.5" />
                               {msg.dataCard.title}
                             </h4>
                             <div className="grid grid-cols-2 gap-2">
                               {msg.dataCard.metrics.map((m, idx) => (
-                                <div key={idx} className="p-2 bg-surface-container-low/50 dark:bg-slate-800 rounded-lg">
-                                  <p className="text-[10px] text-on-surface-variant dark:text-slate-400">{m.label}</p>
-                                  <p className="font-bold text-xs text-on-surface dark:text-slate-100">{m.value}</p>
+                                <div key={idx} className="p-2 bg-slate-800 rounded-lg">
+                                  <p className="text-[10px] text-slate-400">{m.label}</p>
+                                  <p className="font-bold text-xs text-slate-100">{m.value}</p>
                                 </div>
                               ))}
                             </div>
                             {msg.dataCard.recommendation && (
-                              <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium italic">
+                              <p className="text-[11px] text-amber-400 font-medium italic">
                                 💡 {msg.dataCard.recommendation}
                               </p>
                             )}
@@ -494,12 +589,12 @@ export function AquaSenseAIAssistant() {
                         )}
 
                         {msg.actions && msg.actions.length > 0 && (
-                          <div className="mt-3 flex flex-wrap gap-2 pt-2 border-t border-outline-variant/20">
+                          <div className="mt-3 flex flex-wrap gap-2 pt-2 border-t border-slate-700">
                             {msg.actions.map((act, idx) => (
                               <button
                                 key={idx}
                                 onClick={() => handleActionClick(act)}
-                                className="px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
+                                className="px-3 py-1.5 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
                               >
                                 <Sparkles className="w-3 h-3" />
                                 {act.label}
@@ -511,15 +606,15 @@ export function AquaSenseAIAssistant() {
 
                       {/* Message Toolbar: Feedback Ratings & Audio Controls */}
                       {msg.sender === 'assistant' && (
-                        <div className="flex items-center justify-between text-[10px] text-on-surface-variant/70 px-1 w-full">
+                        <div className="flex items-center justify-between text-[10px] text-slate-400 px-1 w-full">
                           <span>{msg.timestamp}</span>
 
                           <div className="flex items-center gap-2">
                             {/* Feedback Ratings */}
                             <button
                               onClick={() => handleFeedback(msg.id, 'UP')}
-                              className={`p-1 hover:text-emerald-500 transition-colors ${
-                                feedbackState[msg.id] === 'UP' ? 'text-emerald-500 font-bold' : ''
+                              className={`p-1 hover:text-emerald-400 transition-colors ${
+                                feedbackState[msg.id] === 'UP' ? 'text-emerald-400 font-bold' : ''
                               }`}
                               title="Upvote response (Tuning Memory)"
                             >
@@ -527,8 +622,8 @@ export function AquaSenseAIAssistant() {
                             </button>
                             <button
                               onClick={() => handleFeedback(msg.id, 'DOWN')}
-                              className={`p-1 hover:text-rose-500 transition-colors ${
-                                feedbackState[msg.id] === 'DOWN' ? 'text-rose-500 font-bold' : ''
+                              className={`p-1 hover:text-rose-400 transition-colors ${
+                                feedbackState[msg.id] === 'DOWN' ? 'text-rose-400 font-bold' : ''
                               }`}
                               title="Downvote response"
                             >
@@ -538,17 +633,17 @@ export function AquaSenseAIAssistant() {
                             {/* Copy & Voice */}
                             <button
                               onClick={() => copyText(msg.id, msg.text)}
-                              className="p-1 hover:text-primary transition-colors"
+                              className="p-1 hover:text-cyan-400 transition-colors"
                               title="Copy response"
                             >
-                              {copiedId === msg.id ? <Check className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
+                              {copiedId === msg.id ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
                             </button>
                             <button
                               onClick={() => speakMessage(msg.id, msg.text)}
-                              className="p-1 hover:text-primary transition-colors"
+                              className="p-1 hover:text-cyan-400 transition-colors"
                               title="Read aloud"
                             >
-                              {speakingMsgId === msg.id ? <VolumeX className="w-3 h-3 text-amber-500" /> : <Volume2 className="w-3 h-3" />}
+                              {speakingMsgId === msg.id ? <VolumeX className="w-3 h-3 text-amber-400" /> : <Volume2 className="w-3 h-3" />}
                             </button>
                           </div>
                         </div>
@@ -558,7 +653,7 @@ export function AquaSenseAIAssistant() {
                 ))}
 
                 {isLoading && (
-                  <div className="flex gap-3 items-center text-primary text-xs font-medium animate-pulse">
+                  <div className="flex gap-3 items-center text-cyan-400 text-xs font-medium animate-pulse">
                     <Bot className="w-4 h-4 animate-spin" />
                     <span>Executing Cosine Similarity Vector RAG Retrieval & Telemetry Analysis...</span>
                   </div>
@@ -567,13 +662,37 @@ export function AquaSenseAIAssistant() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Contextual Suggested Questions Bar */}
-              <div className="px-4 py-2 bg-surface-container-lowest/50 dark:bg-slate-900/50 border-t border-outline-variant/20 overflow-x-auto flex gap-2 no-scrollbar">
+              {/* Contextual Suggested Questions & Command Center Quick Action Bar */}
+              <div className="px-4 py-2 bg-slate-950 border-t border-slate-800 overflow-x-auto flex gap-2 no-scrollbar">
+                <button
+                  onClick={() => handleExecuteFunction('CREATE_ALERT')}
+                  className="whitespace-nowrap px-3 py-1.5 bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30 rounded-full text-xs font-semibold transition-colors flex-shrink-0 flex items-center gap-1"
+                >
+                  ⚡ Create Leak Alert
+                </button>
+                <button
+                  onClick={() => handleExecuteFunction('ASSIGN_ENGINEER')}
+                  className="whitespace-nowrap px-3 py-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 rounded-full text-xs font-semibold transition-colors flex-shrink-0 flex items-center gap-1"
+                >
+                  👷 Assign Repair Team
+                </button>
+                <button
+                  onClick={() => handleExecuteFunction('COMPARE_RESERVOIRS')}
+                  className="whitespace-nowrap px-3 py-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 rounded-full text-xs font-semibold transition-colors flex-shrink-0 flex items-center gap-1"
+                >
+                  📊 Compare Reservoirs
+                </button>
+                <button
+                  onClick={() => handleExecuteFunction('EXPORT_CSV')}
+                  className="whitespace-nowrap px-3 py-1.5 bg-sky-500/20 text-sky-300 border border-sky-500/40 hover:bg-sky-500/30 rounded-full text-xs font-semibold transition-colors flex-shrink-0 flex items-center gap-1"
+                >
+                  📥 Export CSV Data
+                </button>
                 {DEFAULT_SUGGESTED_QUESTIONS.map((q, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(q)}
-                    className="whitespace-nowrap px-3 py-1 bg-surface-container-low dark:bg-slate-800 hover:bg-primary/10 hover:text-primary rounded-full text-xs text-on-surface-variant transition-colors flex-shrink-0"
+                    className="whitespace-nowrap px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-full text-xs transition-colors flex-shrink-0"
                   >
                     {q}
                   </button>
@@ -581,13 +700,13 @@ export function AquaSenseAIAssistant() {
               </div>
 
               {/* Chat Input Bar */}
-              <div className="p-3 bg-white dark:bg-slate-900 border-t border-outline-variant/30 flex items-center gap-2">
+              <div className="p-3 bg-slate-950 border-t border-slate-800 flex items-center gap-2">
                 <button
                   onClick={toggleVoiceInput}
                   className={`p-2.5 rounded-xl transition-all ${
                     isListening
                       ? 'bg-rose-500 text-white animate-pulse'
-                      : 'bg-surface-container-low text-on-surface-variant hover:text-primary'
+                      : 'bg-slate-800 text-slate-300 hover:text-cyan-400 hover:bg-slate-700'
                   }`}
                   title="Speech-to-Text Voice Query"
                 >
@@ -600,13 +719,13 @@ export function AquaSenseAIAssistant() {
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Ask AquaSense AI anything about water policies, leaks, CGWB rules..."
-                  className="flex-1 px-4 py-2.5 text-sm bg-surface-container-low/60 dark:bg-slate-800 rounded-xl border border-outline-variant/30 focus:outline-none focus:border-primary text-on-surface dark:text-white"
+                  className="flex-1 px-4 py-2.5 text-sm bg-slate-800/90 rounded-xl border border-slate-700 focus:outline-none focus:border-cyan-400 text-white placeholder-slate-400"
                 />
 
                 <button
                   onClick={() => handleSendMessage()}
                   disabled={!inputValue.trim() || isLoading}
-                  className="p-2.5 bg-primary text-white rounded-xl hover:brightness-110 disabled:opacity-50 transition-all"
+                  className="p-2.5 bg-primary text-white rounded-xl hover:brightness-110 disabled:opacity-50 transition-all font-semibold"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -616,22 +735,22 @@ export function AquaSenseAIAssistant() {
 
           {/* TAB 2: Digital Twin Simulator */}
           {activeTab === 'simulator' && (
-            <div className="flex-1 p-5 overflow-y-auto space-y-6">
+            <div className="flex-1 p-5 overflow-y-auto space-y-6 bg-slate-900 text-slate-100">
               <div>
-                <h3 className="font-bold text-base text-primary flex items-center gap-2">
+                <h3 className="font-bold text-base text-cyan-400 flex items-center gap-2">
                   <Sliders className="w-5 h-5" />
                   Digital Twin Scenario Stress Test
                 </h3>
-                <p className="text-xs text-on-surface-variant dark:text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   Adjust environmental parameters below to simulate municipal supply risk & shortage projections in real time.
                 </p>
               </div>
 
-              <div className="space-y-4 bg-surface-container-low/50 dark:bg-slate-800/50 p-4 rounded-xl border border-outline-variant/30">
+              <div className="space-y-4 bg-slate-800/70 p-4 rounded-xl border border-slate-700">
                 <div>
                   <div className="flex justify-between text-xs font-semibold mb-1">
                     <span>Population Growth (%)</span>
-                    <span className="text-primary">+{simParams.populationChangePct}%</span>
+                    <span className="text-cyan-400">+{simParams.populationChangePct}%</span>
                   </div>
                   <input
                     type="range"
@@ -639,14 +758,14 @@ export function AquaSenseAIAssistant() {
                     max="50"
                     value={simParams.populationChangePct}
                     onChange={(e) => setSimParams({ ...simParams, populationChangePct: Number(e.target.value) })}
-                    className="w-full accent-primary"
+                    className="w-full accent-cyan-400"
                   />
                 </div>
 
                 <div>
                   <div className="flex justify-between text-xs font-semibold mb-1">
                     <span>Monsoon Rainfall Change (%)</span>
-                    <span className="text-amber-500">{simParams.rainfallChangePct}%</span>
+                    <span className="text-amber-400">{simParams.rainfallChangePct}%</span>
                   </div>
                   <input
                     type="range"
@@ -654,14 +773,14 @@ export function AquaSenseAIAssistant() {
                     max="20"
                     value={simParams.rainfallChangePct}
                     onChange={(e) => setSimParams({ ...simParams, rainfallChangePct: Number(e.target.value) })}
-                    className="w-full accent-primary"
+                    className="w-full accent-cyan-400"
                   />
                 </div>
 
                 <div>
                   <div className="flex justify-between text-xs font-semibold mb-1">
                     <span>Bhatsa Dam Capacity Loss (%)</span>
-                    <span className="text-rose-500">{simParams.reservoirLossPct}%</span>
+                    <span className="text-rose-400">{simParams.reservoirLossPct}%</span>
                   </div>
                   <input
                     type="range"
@@ -669,7 +788,7 @@ export function AquaSenseAIAssistant() {
                     max="0"
                     value={simParams.reservoirLossPct}
                     onChange={(e) => setSimParams({ ...simParams, reservoirLossPct: Number(e.target.value) })}
-                    className="w-full accent-primary"
+                    className="w-full accent-cyan-400"
                   />
                 </div>
               </div>
@@ -684,19 +803,19 @@ export function AquaSenseAIAssistant() {
               </button>
 
               {simResult && (
-                <div className="p-4 bg-surface-container-lowest dark:bg-slate-800 rounded-xl border border-primary/30 space-y-3">
-                  <h4 className="font-bold text-sm text-primary">Simulation Results</h4>
+                <div className="p-4 bg-slate-800 rounded-xl border border-cyan-500/40 space-y-3">
+                  <h4 className="font-bold text-sm text-cyan-400">Simulation Results</h4>
                   <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="p-2.5 bg-surface-container-low rounded-lg">
-                      <p className="text-on-surface-variant">Simulated Risk Score</p>
-                      <p className="font-bold text-lg text-rose-500">{simResult.simulatedRiskScore}/100 ({simResult.simulatedCategory})</p>
+                    <div className="p-2.5 bg-slate-900 rounded-lg">
+                      <p className="text-slate-400">Simulated Risk Score</p>
+                      <p className="font-bold text-lg text-rose-400">{simResult.simulatedRiskScore}/100 ({simResult.simulatedCategory})</p>
                     </div>
-                    <div className="p-2.5 bg-surface-container-low rounded-lg">
-                      <p className="text-on-surface-variant">Projected Deficit</p>
-                      <p className="font-bold text-lg text-amber-500">{simResult.projectedDeficitMld} MLD</p>
+                    <div className="p-2.5 bg-slate-900 rounded-lg">
+                      <p className="text-slate-400">Projected Deficit</p>
+                      <p className="font-bold text-lg text-amber-400">{simResult.projectedDeficitMld} MLD</p>
                     </div>
                   </div>
-                  <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-xs text-amber-700 dark:text-amber-300 font-medium">
+                  <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg text-xs text-amber-300 font-medium">
                     ⚠️ <strong>Recommended Action:</strong> {simResult.mitigationStrategy}
                   </div>
                 </div>
@@ -706,36 +825,36 @@ export function AquaSenseAIAssistant() {
 
           {/* TAB 3: RAG Vector Knowledge Base & Document Ingestion */}
           {activeTab === 'knowledge' && (
-            <div className="flex-1 p-5 overflow-y-auto space-y-6">
+            <div className="flex-1 p-5 overflow-y-auto space-y-6 bg-slate-900 text-slate-100">
               <div>
-                <h3 className="font-bold text-base text-primary flex items-center gap-2">
+                <h3 className="font-bold text-base text-cyan-400 flex items-center gap-2">
                   <Database className="w-5 h-5" />
                   RAG Vector Knowledge Base & Continuous Learning
                 </h3>
-                <p className="text-xs text-on-surface-variant dark:text-slate-400 mt-1">
+                <p className="text-xs text-slate-400 mt-1">
                   Explore indexed water engineering domains or upload custom policy manuals into vector memory.
                 </p>
               </div>
 
               {/* Stats Overview Grid */}
               <div className="grid grid-cols-3 gap-3 text-xs">
-                <div className="p-3 bg-primary/10 rounded-xl border border-primary/20 text-center">
-                  <p className="text-on-surface-variant">Indexed Chunks</p>
-                  <p className="font-bold text-lg text-primary">{knowledgeStats?.totalChunks || 15}</p>
+                <div className="p-3 bg-slate-800/80 rounded-xl border border-slate-700 text-center">
+                  <p className="text-slate-400">Indexed Chunks</p>
+                  <p className="font-bold text-lg text-cyan-400">{knowledgeStats?.totalChunks || 16}</p>
                 </div>
-                <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-center">
-                  <p className="text-on-surface-variant">User Upvotes</p>
-                  <p className="font-bold text-lg text-emerald-600 dark:text-emerald-400">👍 {knowledgeStats?.upvotes || 0}</p>
+                <div className="p-3 bg-slate-800/80 rounded-xl border border-slate-700 text-center">
+                  <p className="text-slate-400">User Upvotes</p>
+                  <p className="font-bold text-lg text-emerald-400">👍 {knowledgeStats?.upvotes || 0}</p>
                 </div>
-                <div className="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-center">
-                  <p className="text-on-surface-variant">Domains</p>
-                  <p className="font-bold text-lg text-amber-600 dark:text-amber-400">{knowledgeStats?.categoriesCount || 15}</p>
+                <div className="p-3 bg-slate-800/80 rounded-xl border border-slate-700 text-center">
+                  <p className="text-slate-400">Domains</p>
+                  <p className="font-bold text-lg text-amber-400">{knowledgeStats?.categoriesCount || 16}</p>
                 </div>
               </div>
 
               {/* Vector Knowledge Search */}
               <div className="space-y-3">
-                <h4 className="font-semibold text-xs text-on-surface dark:text-white flex items-center gap-1.5">
+                <h4 className="font-semibold text-xs text-slate-200 flex items-center gap-1.5">
                   <Search className="w-3.5 h-3.5" />
                   Search Indexed Vector Memory
                 </h4>
@@ -745,20 +864,20 @@ export function AquaSenseAIAssistant() {
                     value={knowledgeSearch}
                     onChange={(e) => handleKnowledgeSearch(e.target.value)}
                     placeholder="Search CGWB drawdown, BIS standards, leak SOPs..."
-                    className="flex-1 px-3 py-2 text-xs bg-surface-container-low/60 dark:bg-slate-800 rounded-lg border border-outline-variant/30 text-on-surface dark:text-white"
+                    className="flex-1 px-3 py-2 text-xs bg-slate-800 rounded-lg border border-slate-700 text-white placeholder-slate-400"
                   />
                 </div>
 
                 {searchResults.length > 0 && (
                   <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                     {searchResults.map((item) => (
-                      <div key={item.id} className="p-2.5 bg-surface-container-lowest dark:bg-slate-800/80 rounded-lg border border-outline-variant/30 text-xs">
-                        <div className="flex justify-between font-bold text-primary">
+                      <div key={item.id} className="p-2.5 bg-slate-800/80 rounded-lg border border-slate-700 text-xs">
+                        <div className="flex justify-between font-bold text-cyan-400">
                           <span>{item.title}</span>
-                          <span className="text-[10px] text-amber-500 font-normal">Score: {item.similarityScore}</span>
+                          <span className="text-[10px] text-amber-400 font-normal">Score: {item.similarityScore}</span>
                         </div>
-                        <p className="text-on-surface-variant dark:text-slate-300 text-[11px] mt-1">{item.content}</p>
-                        <p className="text-[9px] text-on-surface-variant/70 mt-1 italic">Source: {item.source}</p>
+                        <p className="text-slate-300 text-[11px] mt-1">{item.content}</p>
+                        <p className="text-[9px] text-slate-400 mt-1 italic">Source: {item.source}</p>
                       </div>
                     ))}
                   </div>
@@ -766,8 +885,8 @@ export function AquaSenseAIAssistant() {
               </div>
 
               {/* Ingest Custom Document Form */}
-              <form onSubmit={handleIngestDocument} className="p-4 bg-surface-container-low/50 dark:bg-slate-800/50 rounded-xl border border-outline-variant/30 space-y-3">
-                <h4 className="font-semibold text-xs text-primary flex items-center gap-1.5">
+              <form onSubmit={handleIngestDocument} className="p-4 bg-slate-800/70 rounded-xl border border-slate-700 space-y-3">
+                <h4 className="font-semibold text-xs text-cyan-400 flex items-center gap-1.5">
                   <UploadCloud className="w-4 h-4" />
                   Continuous Learning: Ingest Custom Document / Policy
                 </h4>
@@ -776,7 +895,7 @@ export function AquaSenseAIAssistant() {
                   placeholder="Document Title (e.g. Ward 4 Maintenance SOP 2026)"
                   value={ingestDoc.title}
                   onChange={(e) => setIngestDoc({ ...ingestDoc, title: e.target.value })}
-                  className="w-full px-3 py-2 text-xs bg-white dark:bg-slate-900 rounded-lg border border-outline-variant/30 text-on-surface dark:text-white"
+                  className="w-full px-3 py-2 text-xs bg-slate-900 rounded-lg border border-slate-700 text-white placeholder-slate-400"
                   required
                 />
                 <textarea
@@ -784,7 +903,7 @@ export function AquaSenseAIAssistant() {
                   value={ingestDoc.content}
                   onChange={(e) => setIngestDoc({ ...ingestDoc, content: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 text-xs bg-white dark:bg-slate-900 rounded-lg border border-outline-variant/30 text-on-surface dark:text-white"
+                  className="w-full px-3 py-2 text-xs bg-slate-900 rounded-lg border border-slate-700 text-white placeholder-slate-400"
                   required
                 />
                 <button

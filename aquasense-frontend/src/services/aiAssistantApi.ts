@@ -63,5 +63,14 @@ export const aiAssistantApi = {
   searchKnowledge: async (query: string) => {
     const res = await api.get('/ai-assistant/knowledge-search', { params: { q: query } });
     return res.data;
+  },
+
+  executeCommand: async (command: 'CREATE_ALERT' | 'ASSIGN_ENGINEER' | 'COMPARE_RESERVOIRS' | 'EXPORT_CSV', payload?: any) => {
+    if (command === 'EXPORT_CSV') {
+      const res = await api.post('/ai-assistant/command', { command, payload }, { responseType: 'blob' });
+      return res.data;
+    }
+    const res = await api.post('/ai-assistant/command', { command, payload });
+    return res.data;
   }
 };

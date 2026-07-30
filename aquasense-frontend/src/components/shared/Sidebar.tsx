@@ -44,7 +44,10 @@ export function Sidebar() {
         <div className="bg-surface-container-low rounded-xl p-4">
           <p className="font-label-md text-primary mb-1">Need help?</p>
           <p className="font-body-sm text-on-surface-variant mb-3">Ask the AquaSense AI Assistant for guidance.</p>
-          <button onClick={() => toast('AI Assistant Chat feature coming soon!')} className="w-full bg-primary-container text-on-primary-container py-2 rounded-lg font-label-md hover:brightness-95 transition-all text-sm">
+          <button 
+            onClick={() => window.dispatchEvent(new CustomEvent('open-aquasense-ai-chat'))} 
+            className="w-full bg-primary text-white py-2 rounded-lg font-label-md hover:brightness-110 transition-all text-sm font-semibold shadow-sm"
+          >
             Open Chat
           </button>
         </div>

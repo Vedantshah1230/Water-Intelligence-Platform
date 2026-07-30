@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { MainLayout } from '@/layouts/MainLayout';
 import { MapInterface } from '@/pages/MapInterface';
@@ -49,6 +49,9 @@ export function AppRoutes() {
           <Route path="system" element={<SystemHealth />} />
           <Route path="settings" element={<Settings />} />
         </Route>
+
+        {/* Wildcard 404 Fallback Route */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </AuthProvider>
   );

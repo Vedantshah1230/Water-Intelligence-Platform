@@ -117,4 +117,34 @@ router.get('/knowledge/stats', async (req: Request, res: Response) => {
   }
 });
 
+// POST /api/ai-assistant/command (Autonomous Function Calling)
+router.post('/command', async (req: Request, res: Response) => {
+  try {
+    const { command, payload = {} } = req.body;
+    if (!command) {
+      return res.status(400).json({ error: 'Command type is required' });
+    }
+
+    if (command === 'CREATE_ALERT') {
+      const alert = await aiAssistantService.executeAlertCreation(payload);
+      return res.json({ success: true, command, result: alert, message: `Created ${alert.severity} alert at ${alert.location}` });
+    } else if (command === 'ASSIGN_ENGINEER') {
+      const assignment = await aiAssistantService.executeEngineerAssignment(payload);
+      return res.json({ success: true, command, result: assignment, message: `Dispatched ${assignment.engineerName} to ${assignment.location}` });
+    } else if (command === 'COMPARE_RESERVOIRS') {
+      const comparison = await aiAssistantService.executeReservoirComparison();
+      return res.json({ success: true, command, result: comparison });
+    } else if (command === 'EXPORT_CSV') {
+      const csv = await aiAssistantService.generateTelemetryCSV();
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="AquaSense_Telemetry.csv"');
+      return res.send(csv);
+    } else {
+      return res.status(400).json({ error: `Unknown command type: ${command}` });
+    }
+  } catch (error: any) {
+    res.status(500).json({ error: 'Failed to execute AI command function', details: error.message });
+  }
+});
+
 export default router;
